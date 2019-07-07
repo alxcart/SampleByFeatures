@@ -1,0 +1,38 @@
+# This file contains metadata for your plugin. Since
+# version 2.0 of QGIS this is the proper way to supply
+# information about a plugin. The old method of
+# embedding metadata in __init__.py will
+# is no longer supported since version 2.0.
+
+# This file should be included when you package your plugin.# Mandatory items:
+
+[general]
+name=Sample By Feature
+qgisMinimumVersion=3.0
+description=This plugin calculates the sample size (n) from population size (N) and inspection level (I, II or III).
+version=0.2
+author=Alex Santos
+email=alxcart@gmail.com
+
+about=The sampling plan by feature class (layer) calculates the sample size (n) from population size (N) and inspection level (I, II or III). The population size (N) is the total number of records in the layer. Inspection level I, II or III indicates the degree of inspection severity. This sampling plan is based on ISO 2859-2.
+
+tracker=https://github.com/alxcart/SampleByFeatures/issues
+repository=https://github.com/alxcart/SampleByFeatures
+# End of mandatory metadata
+
+# Recommended items:
+
+# Uncomment the following line and add your changelog:
+# changelog=
+
+# Tags are comma separated with spaces allowed
+tags=spatial data quality, sampling plans, iso 19157, iso 2859
+
+homepage=https://github.com/alxcart/SampleByFeatures/wiki
+category=Vector
+icon=icon.png
+# experimental flag
+experimental=False
+
+# deprecated flag (applies to the whole plugin, not just a single version)
+deprecated=False

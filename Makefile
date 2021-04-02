@@ -1,12 +1,11 @@
 #/***************************************************************************
-# SampleByFeature
+# SampleByFeatures
 #
-# 
-This plugin calculates the sample size (n) from the population size (N), according to ISO 2859-2.
+# The sampling plan by feature class (layer) calculates the sample size (n) from population size (N), inspection level (I, II or III) and acceptable quality limit (AQL). 
 #							 -------------------
-#		begin				: 2019-04-14
+#		begin				: 2021-03-22
 #		git sha				: $Format:%H$
-#		copyright			: (C) 2019 by Alex Santos
+#		copyright			: (C) 2021 by Alex Santos
 #		email				: alxcart@gmail.com
 # ***************************************************************************/
 #
@@ -39,15 +38,15 @@ LOCALES =
 # translation
 SOURCES = \
 	__init__.py \
-	samplebyfeatures.py samplebyfeatures_dialog.py
+	SampleByFeatures.py SampleByFeatures_dialog.py
 
-PLUGINNAME = samplebyfeatures
+PLUGINNAME = SampleByFeatures
 
 PY_FILES = \
 	__init__.py \
-	samplebyfeatures.py samplebyfeatures_dialog.py
+	SampleByFeatures.py SampleByFeatures_dialog.py
 
-UI_FILES = samplebyfeatures_dialog_base.ui
+UI_FILES = SampleByFeatures_dialog_base.ui
 
 EXTRAS = metadata.txt icon.png
 

@@ -1,20 +1,16 @@
-# This file contains metadata for your plugin. Since
-# version 2.0 of QGIS this is the proper way to supply
-# information about a plugin. The old method of
-# embedding metadata in __init__.py will
-# is no longer supported since version 2.0.
+# This file contains metadata for your plugin.
 
 # This file should be included when you package your plugin.# Mandatory items:
 
 [general]
-name=Sample By Feature
+name=Sample By Features
 qgisMinimumVersion=3.0
-description=This plugin calculates the sample size (n) from population size (N) and inspection level (I, II or III).
-version=0.2
+description=The sampling plan by feature class (layer) calculates the sample size (n) from population size (N), inspection level (I, II or III) and acceptable quality limit (AQL). 
+version=0.5
 author=Alex Santos
 email=alxcart@gmail.com
 
-about=The sampling plan by feature class (layer) calculates the sample size (n) from population size (N) and inspection level (I, II or III). The population size (N) is the total number of records in the layer. Inspection level I, II or III indicates the degree of inspection severity. This sampling plan is based on ISO 2859-2.
+about=The sampling plan by feature class (layer) calculates the sample size (n) from population size (N), inspection level (I, II or III) and acceptable quality limit (AQL). The population size (N) is the total number of records in the layer. Inspection level I, II or III indicates the degree of inspection severity. This sampling plan is based on ISO 2859-2. O plano de amostragem por feição (camada) calcula o tamanho da amostra (n) a partir do tamanho da população (N). O plano de amostragem por feição (camada) calcula o tamanho da amostra (n) a partir do tamanho da população (N). O tamanho da população (N) é o número total de instâncias de feições na camada. O nível de inspeção I, II ou III indica o grau de severidade da inspeção. O Limite de Qualidade Aceitável é o percetual de itens não conforme desejado no seu conjunto de dados. Este plano de amostragem é baseada nas NBRs 5425, 5426 e 5427.
 
 tracker=https://github.com/alxcart/SampleByFeatures/issues
 repository=https://github.com/alxcart/SampleByFeatures
@@ -22,11 +18,12 @@ repository=https://github.com/alxcart/SampleByFeatures
 
 # Recommended items:
 
+hasProcessingProvider=no
 # Uncomment the following line and add your changelog:
 # changelog=
 
 # Tags are comma separated with spaces allowed
-tags=spatial data quality, sampling plans, iso 19157, iso 2859
+tags=sample, sampling plan, feature, shapefile, vector, quality, iso 19157:2013, acceptable quality limit, AQL, LQA, amostra, amostragem
 
 homepage=https://github.com/alxcart/SampleByFeatures/wiki
 category=Vector
@@ -36,3 +33,15 @@ experimental=False
 
 # deprecated flag (applies to the whole plugin, not just a single version)
 deprecated=False
+
+# Since QGIS 3.8, a comma separated list of plugins to be installed
+# (or upgraded) can be specified.
+# Check the documentation for more information.
+# plugin_dependencies=
+
+Category of the plugin: Raster, Vector, Database or Web
+# category=
+
+# If the plugin can run on QGIS Server.
+server=False
+

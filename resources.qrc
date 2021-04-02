@@ -1,5 +1,5 @@
 <RCC>
-    <qresource prefix="/plugins/samplebyfeatures" >
+    <qresource prefix="/plugins/SampleByFeatures" >
         <file>icon.png</file>
     </qresource>
 </RCC>

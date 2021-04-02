@@ -1,17 +1,42 @@
-<h3>Plugin Sample by Features / Amostra por fei&ccedil;&atilde;o</h3>
-<p>Este plugin elabora um plano de amostragem orientado por fei&ccedil;&atilde;o. O objetivo &eacute; permitir a realizi&ccedil;&atilde;o de inspe&ccedil;&otilde;es de qualidade para a aprova&ccedil;&atilde;o ou reprova&ccedil;&atilde;o de um conjunto de dados espaciais, segundo n&iacute;veis de conformidade desejados.&nbsp;<br /><br /></p>
-<div id="help" style="font-size: .9em;">
-<h3>Funcionalidades</h3>
+<html>
+<body>
+<h3>Plugin Builder Results</h3>
+
+Congratulations! You just built a plugin for QGIS!<br/><br />
+
+<div id='help' style='font-size:.9em;'>
+Your plugin <b>SampleByFeatures</b> was created in:<br>
+&nbsp;&nbsp;<b>E:/GoogleDrive/Projetos_2021/EuProgramador/Plugin_Builder/Em_trabalho/22mar2021\samplebyfeatures</b>
+<p>
+Your QGIS plugin directory is located at:<br>
+&nbsp;&nbsp;<b>C:/Users/alxca/AppData/Roaming/QGIS/QGIS3/profiles/default/python/plugins</b>
+<p>
+<h3>What's Next</h3>
 <ol>
-<li>O tamanho da popu&ccedil;&atilde;o (N) &eacute; baseado na quantidade de registros da camada desejada.&nbsp;&nbsp;</li>
-<li>O tamanho da amostra (n) &eacute; obtido com base nas tabelas padronizadas da ISO 2859.</li>
-<li>O usu&aacute;rio define quais ser&atilde;o os crit&eacute;rios avaliados.</li>
-<li>Este plugin &eacute; recomendado para aferi&ccedil;&atilde;o da acur&aacute;cia tem&aacute;tica do conjunto de dados.&nbsp;</li>
+    <li>If resources.py is not present in your plugin directory, compile the resources file using pyrcc5 (simply use <b>pb_tool</b> or <b>make</b> if you have automake)
+    <li>Optionally, test the generated sources using <b>make test</b> (or run tests from your IDE)
+    <li>Copy the entire directory containing your new plugin to the QGIS plugin directory (see Notes below)
+    <li>Test the plugin by enabling it in the QGIS plugin manager
+    <li>Customize it by editing the implementation file <b>SampleByFeatures.py</b>
+    <li>Create your own custom icon, replacing the default <b>icon.png</b>
+    <li>Modify your user interface by opening <b>SampleByFeatures_dialog_base.ui</b> in Qt Designer
 </ol>
-<p>Notes:</p>
+Notes:
 <ul>
-<li>O plugin &eacute; baseado no <a title="Manual de Avalia&ccedil;&atilde;o da Qualidade de Dados Geoespaciais" href="https://biblioteca.ibge.gov.br/visualizacao/livros/liv101152.pdf" target="_blank" rel="noopener"><strong>Manual T&eacute;cnico de Geoci&ecirc;ncias de Avalia&ccedil;&atilde;o da Qualidade de Dados Geoespaciais do IBGE</strong></a>.&nbsp;</li>
-<li>Mais informa&ccedil;&otilde;es deste plugin est&atilde;o dispon&iacute;veis em:&nbsp;<a title="Sample by Features" href="https://github.com/alxcart/SampleByFeatures/wiki" target="_blank" rel="noopener">https://github.com/alxcart/SampleByFeatures/wiki</a></li>
+    <li>You can use <b>pb_tool</b> to compile, deploy, and manage your plugin. Tweak the <i>pb_tool.cfg</i> file included with your plugin as you add files. Install <b>pb_tool</b> using 
+        <i>pip</i> or <i>easy_install</i>. See <b>http://loc8.cc/pb_tool</b> for more information.
+    <li>You can also use the <b>Makefile</b> to compile and deploy when you
+        make changes. This requires GNU make (gmake). The Makefile is ready to use, however you 
+        will have to edit it to add addional Python source files, dialogs, and translations.
 </ul>
 </div>
-<p>&copy;2019 Alex Santos</p>
+<div style='font-size:.9em;'>
+<p>
+For information on writing PyQGIS code, see <b>http://loc8.cc/pyqgis_resources</b> for a list of resources.
+</p>
+</div>
+<p>
+&copy;2011-2019 GeoApt LLC - geoapt.com 
+</p>
+</body>
+</html>

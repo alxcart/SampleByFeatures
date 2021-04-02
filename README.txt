@@ -1,7 +1,7 @@
 Plugin Builder Results
 
 Your plugin SampleByFeatures was created in:
-    E:/GoogleDrive/Projetos_2021/EuProgramador/Plugin_Builder/Em_trabalho/22mar2021\samplebyfeatures
+    E:/GoogleDrive/Projetos_2021/EuProgramador/Plugin_Builder/Em_trabalho/04abril2021\samplebyfeatures
 
 Your QGIS plugin directory is located at:
     C:/Users/alxca/AppData/Roaming/QGIS/QGIS3/profiles/default/python/plugins

@@ -25,6 +25,21 @@ from qgis.PyQt.QtCore import QSettings, QTranslator, QCoreApplication
 from qgis.PyQt.QtGui import QIcon
 from qgis.PyQt.QtWidgets import QAction
 
+from qgis.core import *
+from math import ceil
+import os.path
+from osgeo import ogr
+import random
+
+from .constants import * # constants of project
+from .main_sample_plan import * # functions of project
+
+# based on the clip_multiple_layers plugin
+import processing, os, subprocess, time
+from qgis.utils import *
+from qgis.PyQt.QtCore import *
+from processing.algs.gdal.GdalUtils import GdalUtils
+
 # Initialize Qt resources from file resources.py
 from .resources import *
 # Import the code for the dialog
@@ -61,11 +76,21 @@ class SampleByFeatures:
 
         # Declare instance attributes
         self.actions = []
-        self.menu = self.tr(u'&Sample By Features')
+        self.menu = self.tr(u'&Sample by features')
+
+        # Create the dialog (after translation) and keep reference
+        self.dlg = SampleByFeaturesDialog()
 
         # Check if plugin was started the first time in current QGIS session
         # Must be set in initGui() to survive plugin reloads
         self.first_start = None
+
+        #Connecting the buttons and actions / Conectando os botoes e acoes
+        self.dlg.lineEdit.clear()
+        self.initFolder()
+        self.dlg.pushButton.clicked.connect(self.select_output_file)
+        # add news buttons here        
+
 
     # noinspection PyMethodMayBeStatic
     def tr(self, message):
@@ -175,10 +200,32 @@ class SampleByFeatures:
         """Removes the plugin menu item and icon from QGIS GUI."""
         for action in self.actions:
             self.iface.removePluginVectorMenu(
-                self.tr(u'&Sample By Features'),
+                self.tr(u'&Sample by features'),
                 action)
             self.iface.removeToolBarIcon(action)
 
+    def initFolder(self):
+        path_project = QgsProject.instance().fileName()
+        path_project = path_project[:path_project.rfind("/"):]
+        self.folderName = path_project
+
+        self.dlg.lineEdit.setText(self.folderName)
+
+    def select_output_file(self):
+    #Select output folder / Seleciona a pasta de saida
+        folderTmp = QFileDialog.getExistingDirectory(self.dlg, "Select output folder ", self.folderName)
+        if folderTmp != "":
+            self.folderName = folderTmp
+        self.dlg.lineEdit.setText(self.folderName)
+
+    def isFileOpened(self, file_path):
+        if os.path.exists(file_path):
+            try:
+                os.rename(file_path, file_path+"_")
+                os.rename(file_path+"_", file_path)
+                return False
+            except OSError as e:
+                return True
 
     def run(self):
         """Run method that performs all the real work"""
@@ -188,6 +235,20 @@ class SampleByFeatures:
         if self.first_start == True:
             self.first_start = False
             self.dlg = SampleByFeaturesDialog()
+            self.dlg.pushButton.clicked.connect(self.select_output_file)
+
+        # Preenchendo o comboBox (principal)
+        self.dlg.comboBox.clear()
+        #self.dlg.lineEditSize.setText(str(4.0))
+        #self.dlg.comboBoxLevel.setItemText(self, 1, "II")
+
+        #layers = list_layers()
+        
+        layers = QgsProject.instance().mapLayers().values()
+        for layer in layers:
+            if layer.type() == QgsMapLayer.VectorLayer :
+                if layer.isValid()==True:
+                    self.dlg.comboBox.addItem(layer.name(), layer )
 
         # show the dialog
         self.dlg.show()
@@ -197,4 +258,47 @@ class SampleByFeatures:
         if result:
             # Do something useful here - delete the line containing pass and
             # substitute with your code.
-            pass
+            #pass
+            if not os.path.isdir(self.folderName):
+                raise FileNotFoundError(
+                    errno.ENOENT, os.strerror(errno.ENOENT), self.folderName)
+
+            directory = self.folderName + "/sample_features"
+            if not os.path.exists(directory):
+                os.makedirs(directory)
+            
+            #Input data selection
+            index = self.dlg.comboBox.currentIndex()
+            selection = self.dlg.comboBox.itemData(index)
+            checkedLayers = QgsProject.instance().layerTreeRoot().checkedLayers()
+            
+            # Sampling plan / Plano de amostragem
+            nivel_inspecao = self.dlg.comboBoxLevel.currentIndex()
+            tipo_inspecao = self.dlg.comboBoxType.currentIndex()
+            lqa = self.dlg.comboBoxLQA.currentIndex()
+       
+
+###########  Sample by features ###########################   
+   
+            N, n, num_aceitacao, letra_codigo_i, letra_codigo_f, msg = sample_plan (features_selection(selection), nivel_inspecao, lqa + 4 , tipo_inspecao)
+
+            # Se o numero de aceitacao for ""Utilizar plano de amostragem simples indicado acima"
+            # Mudar o tipo de inspeção de multipla ou dupla para simples
+            if dicAc_dupla[num_aceitacao][0] == "Utilizar plano de amostragem simples indicado acima" or dicAc_multipla[num_aceitacao][0] == "Utilizar plano de amostragem simples indicado acima":
+                tipo_inspecao = 0   
+                N, n, num_aceitacao, letra_codigo_i, letra_codigo_f, msg = sample_plan (features_selection(selection), nivel_inspecao, lqa + 4 , tipo_inspecao)
+            
+###########################################################           
+            # Export results - file created and save
+            pth = directory
+            output_sample(N, n, selection, pth, msg, num_aceitacao)
+
+           
+            if N > n:
+                msg_sample_plan( N, n, num_aceitacao, letra_codigo_i, letra_codigo_f, msg, lqa, nivel_inspecao)
+        
+            if N <= n:
+                msg_complete( N, n, msg) 
+
+############################      
+

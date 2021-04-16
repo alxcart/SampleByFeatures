@@ -1,4 +1,4 @@
 ##### Sample by Features
-![Logo sample by features](https://plugins.qgis.org/media/cache/3a/9c/3a9c4b36a8f11abeca6f4f8e2f87d24f.png)
+![Logo sample by features](https://plugins.qgis.org/media/cache/6b/b7/6bb7a162257fa7d9de238d7c0dd1bb82.png)
 
 ##### por Alex Santos

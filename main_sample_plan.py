@@ -1,6 +1,7 @@
 # functions e constants plugins
 # executable in Terminal Python QGIS 
 from qgis.core import *
+#from qgis.core import Qgis
 # #### Importar biblioteca "random"
 from PyQt5.QtWidgets import QAction, QFileDialog, QMessageBox
 from qgis.core import *
@@ -9,7 +10,8 @@ import os.path
 from qgis.utils import *
 import random
 from osgeo import ogr
-from .constants import * # constants of project
+#from .constants import * # constants of project
+from math import ceil # size of cell - sample by area
 
 """
 # Sampling plan / Plano de amostragem
@@ -105,6 +107,80 @@ TAB_LQA = {2:["A", 2,0,0,"down","down","down","down","down","down",0,"down","dow
                 800:["P", 800,500,200,7,10,14,21,"up","up","up","up","up","up"], 
                 1250:["Q", 1250,800,315,10,14,21,"up","up","up","up","up","up","up"], 
                 2000:["R", 2000,1250,500,14,21,"up","up","up","up","up","up","up","up"]}
+
+dicAc_dupla = {0:["Utilizar plano de amostragem simples indicado acima", "Utilizar plano de amostragem simples indicado acima"], 
+               1:[0, 2], 
+               2:[0, 3], 
+               3:[1, 4], 
+               5:[2, 5], 
+               7:[3, 7], 
+               8:[3, 7], 
+               10:[5, 9], 
+               12:[6, 10], 
+               14:[7, 11], 
+               18:[9, 14],
+               21:[11, 16]}
+dicAc_simples = {0:[0, 1], 
+                 1:[1, 2], 
+                 2:[2, 3], 
+                 3:[3, 4], 
+                 5:[5, 6], 
+                 7:[7, 8], 
+                 8:[8, 9], 
+                 10:[10, 11], 
+                 12:[12, 13], 
+                 14:[14, 15], 
+                 18:[18, 19],
+                 21:[21, 22]}
+dicAc_multipla = {0:["Utilizar plano de amostragem simples indicado acima","Utilizar plano de amostragem simples indicado acima"], 
+                  1: ["", 2], 
+                  2: ["Aceitação não permitida com o tamanho de amostra indicado", 2], 3: ["Aceitação não permitida com o tamanho de amostra indicado", 3], 
+                  5: ["Aceitação não permitida com o tamanho de amostra indicado", 4], 
+                  7: [0, 4], 
+                  8: [0, 4], 
+                  10: [0, 5], 
+                  12: [0, 6], 
+                  14: [1, 7], 
+                  18: [1, 8],
+                  21: [2, 9]}
+#############################################################################################
+# Map Units
+#Meters                  = 0
+#Feet                    = 1
+#Degrees                 = 2
+#UnknownUnit             = 3
+#DecimalDegrees          = 4
+#DegreesMinutesSeconds   = 5
+#DegreesDecimalMinutes   = 6
+#NauticalMiles           = 7
+
+uMeters                 = QgsUnitTypes.DistanceMeters 	        #Meters.
+uKilometers             = QgsUnitTypes.DistanceKilometers 	    #Kilometers.
+uImperialFeet           = QgsUnitTypes.DistanceFeet 	        #Imperial feet.
+uNauticalMiles          = QgsUnitTypes.DistanceNauticalMiles 	#Nautical miles.
+uImperialYards          = QgsUnitTypes.DistanceYards 	        #Imperial yards.
+uTerrestrialMiles       = QgsUnitTypes.DistanceMiles 	        #Terrestrial miles.
+uDegrees                = QgsUnitTypes.DistanceDegrees 	        #Degrees, for planar geographic CRS distance measurements.
+uCentimeters            = QgsUnitTypes.DistanceCentimeters 	    #Centimeters.
+uMillimeters            = QgsUnitTypes.DistanceMillimeters 	    #Millimeters.
+uUnknownDistanceUnit    = QgsUnitTypes.DistanceUnknownUnit 	    #Unknown distance unit.
+
+#Convert km to
+#Meter
+m = 1000
+
+#Feet
+ft = 3280.8398950131
+
+#Degrees
+dg = 1/111.320
+
+#NauticalMiles
+nm = 0.54
+
+#UnknownUnit
+uk = 1
+#######################################################################################
 
 # ### Função tamanho da amostra (n)
 # Funcao para encontrar a letra codigo a partir do N e do nivel de inspecao
@@ -223,14 +299,33 @@ def n_final(n, tipo_inspecao):
     nfinal = n
     return nfinal, msg
 
-# ### Função: Seleciona amostra 
-
+#### Randow sampling / Função: Seleciona amostra 
+#by_area_feature
 def select_sample (N, n):
     #n = sample_plan(N)[0]
     randomNum = random.sample(range(N),1)[0]
     isSelectedId = random.sample(range(N), n)
 
     return randomNum, isSelectedId
+
+def sistematic_sample(N, n):
+#Systematic sampling #Amostragem sistematica
+    randomNum = random.sample(range(N),1)[0]
+
+    step= N // n
+    module = randomNum % step
+
+    listIds=range(N) 
+    isSelectedId = []
+    x = 1
+    for i in listIds:
+        if x <= n: 
+            if (i) % step == module:
+                isSelectedId.append(i)
+                x += 1   
+    return randomNum, isSelectedId
+## Incluir o layer temporário/intermediário para permitir a execução desta função
+## Será necessário mais variáveis 
 
 """
 # ### Função: Plano de amostragem
@@ -345,7 +440,16 @@ def add_fields(provider):
     fields.append(QgsField("status", QVariant.String))
     fields.append(QgsField("tx_report", QVariant.String))
     return fields 
-    
+####
+def add_fields_by_area(provider):
+    fields = QgsFields() # utilizar na inspecao por area 
+    #fields = provider.fields()
+    fields.append(QgsField("id_measure", QVariant.Int))
+    fields.append(QgsField("checked", QVariant.String))
+    fields.append(QgsField("status", QVariant.String))
+    fields.append(QgsField("tx_report", QVariant.String))
+    return fields
+###    
 def sample_features(pop_size, sample_size):
     #randomNum = random.sample(range(featureCount),1)[0]
     isSelectedId = random.sample(range(pop_size), sample_size)
@@ -385,7 +489,7 @@ def output_sample(pop_size, sample_size, selection, directory, mensagem, num_ace
                 texto_ac_re = "_NA_"
             if Ac == "Utilizar plano de amostragem simples indicado acima" or Ac == "Aceitação não permitida com o tamanho de amostra indicado":
                 texto_ac_re = "_NA_"        
-        
+        texto_id_file = (str(sample_size)  + tipo + texto_ac_re)
         filename = os.path.join(directory + "/sample_" + str(sample_size) + tipo + texto_ac_re + selection.name() +".shp")
         ds = ogr.GetDriverByName("Esri Shapefile")
 
@@ -396,9 +500,60 @@ def output_sample(pop_size, sample_size, selection, directory, mensagem, num_ace
                 file.addFeature(feat)
         del file
            
-        iface.addVectorLayer(filename, "", "ogr")
+        # iface.addVectorLayer(filename, "", "ogr")
+        return texto_id_file, filename
+
+def output_sample_grade(pop_size, sample_size, selection, directory, grade, isSelectedId, mensagem, num_aceitacao): 
+    if pop_size > sample_size:
+        #isSelectedId = sample_features(pop_size, sample_size)
+        features, dp, provider, geometry, crs, encoding  = data_provider(selection)
+        geometry = 6 #'MultiPolygon' 
+        fields = add_fields_by_area(dp)
+        tipo = "C"
+        if mensagem == "inspeção amostral simples":
+            tipo = "S"
+            Ac, Re = dicAc_simples[num_aceitacao]
+            texto_ac_re = "_Ac" + str(Ac) + "_Re" + str(Re) #+ "_" 
+
+            if Ac == "Utilizar plano de amostragem simples indicado acima" or Ac == "Aceitação não permitida com o tamanho de amostra indicado":
+                texto_ac_re = "_NA_"
+
+            if Ac == "Utilizar plano de amostragem simples indicado acima" or Ac == "Aceitação não permitida com o tamanho de amostra indicado":
+                texto_ac_re = "_NA_"
+
+        if mensagem == "inspeção amostral dupla": 
+            tipo = "D"
+            Ac, Re = dicAc_dupla[num_aceitacao]
+            texto_ac_re = "_Ac" + str(Ac) + "_Re" + str(Re) #+ "_" 
+            if Ac == "Utilizar plano de amostragem simples indicado acima" or Ac == "Aceitação não permitida com o tamanho de amostra indicado":
+                texto_ac_re = "_NA_"
+
+            if Ac == "Utilizar plano de amostragem simples indicado acima" or Ac == "Aceitação não permitida com o tamanho de amostra indicado":
+                texto_ac_re = "_NA_"
+        if mensagem == "inspeção amostral múltipla": 
+            tipo = "M"
+            Ac, Re = dicAc_multipla[num_aceitacao]  
+            texto_ac_re = "_Ac" + str(Ac) + "_Re" + str(Re) # + "_" 
+            if Ac == "Utilizar plano de amostragem simples indicado acima" or Ac == "Aceitação não permitida com o tamanho de amostra indicado":
+                texto_ac_re = "_NA_"
+            if Ac == "Utilizar plano de amostragem simples indicado acima" or Ac == "Aceitação não permitida com o tamanho de amostra indicado":
+                texto_ac_re = "_NA_"           
+        texto_id_file = (str(sample_size)  + tipo + texto_ac_re)
+        filename = os.path.join(directory + "/sample_area_" + texto_id_file + ".shp")
+        #filename_gpkg = os.path.join(directory + "/sample_area_" + texto_id_file + ".gpkg")
+        ds = ogr.GetDriverByName("Esri Shapefile")
+        # Testar a existência do arquivo shapefile
+        file = QgsVectorFileWriter(filename, encoding, fields, geometry, crs, ds.name)
+        #file_gpkg = QgsVectorFileWriter(filename_gpkg, encoding, crs, "GPKG")       
+
+        for i, feat in enumerate(grade):
+            if i in isSelectedId:
+                file.addFeature(feat)
+        del file
         
-       
+
+        return texto_id_file, filename
+              
 def msg_sample_plan(pop_size, sample_size, num_aceitacao, letra_codigo_i, letra_codigo_f, mensagem, lqa, nivel_inspecao):
     if mensagem == "inspeção amostral simples":
         Ac, Re = dicAc_simples[num_aceitacao]
@@ -415,19 +570,100 @@ def msg_sample_plan(pop_size, sample_size, num_aceitacao, letra_codigo_i, letra_
     #     #print(Ac, Re, msg)
     #     "\n Ac = " + str(Ac) +
     #     "\n Re = " + str(Re) +
-    #"\n Ac = " + str(num_aceitacao) +     
-    QMessageBox.about(None, "Sample by feature", str(mensagem) + 
-    "\n nivel de inspeção  " + str(id_nivel_inspecao(nivel_inspecao)) +
-    "\n LQA = " + str(id_lqa(lqa)) +
-    "\n N = " + str(pop_size)+ 
-    "\n n = " + str(sample_size) +
-    "\n Ac = " + str(Ac) +
-    "\n Re = " + str(Re) +
-    "\n Letra código (inicial) = " + str(letra_codigo_i) +
-    "\n Letra codigo (final) = " + str(letra_codigo_i))
+    #"\n Ac = " + str(num_aceitacao) + 
     
+    # Escrever aquivo texto
+    texto = ("-----  Plano de amostragem -----\n" + str(mensagem).capitalize() + 
+    "\nNivel de inspeção  " + str(id_nivel_inspecao(nivel_inspecao)) +
+    "\nLQA = " + str(id_lqa(lqa)) +
+    "\nN = " + str(pop_size)+ 
+    "\nn = " + str(sample_size) +
+    "\nAc = " + str(Ac) +
+    "\nRe = " + str(Re) +
+    "\nLetra código (inicial) = " + str(letra_codigo_i) +
+    "\nLetra codigo (final) = " + str(letra_codigo_i) #+ 
+    #"\n ------------------------------------"
+    )
+    texto_resultado = ("\n----- Resultado -----" +
+    "\nAprovados = " + 
+    "\nReprovados = " +
+    "\nNível de conformidade*** = " +
+    "\n ------------------------------------ " +
+    "\nNota:\n \n \n" +
+    "\n ------------------------------------ " +
+    "\n*** O nível de conformidade pode ser aprovado, reprovado ou inclusivo" +
+    "\nPor exemplo: Aprovado, segundo o plano de amostragem simples e o LQA de 4% " +
+    "\nPor exemplo: Reprovado, segundo o plano de amostragem múltipla e o LQA de 2,5%" + 
+    "\nPor exemplo: Inclusivo, segundo o plano de amostragem dupla e o LQA de 10%" +
+    "\nPor exemplo: Inclusivo, segundo o plano de amostragem múltipla e o LQA de 6,5%" +
+    "\n ------------------------------------ "
+
+            )
+    #QMessageBox.about(None, "Sample by area", texto)
+
+    return texto, texto_resultado
+
+def metadado(abstract_1o, abstract_2o, dimensao_grade, aoi, nome_arquivo):
+    qmd_metadado = ("<!DOCTYPE qgis PUBLIC 'http://mrcc.com/qgis.dtd' 'SYSTEM'>" +
+    "\n<qgis version = '" + str(Qgis.QGIS_VERSION) + "'>" 
+    "\n<identifier>" + str(nome_arquivo) + "</identifier>" + # colocar nome do shapefile
+    "\n  <parentidentifier>Plano de amostragem</parentidentifier>" +
+    "\n<language>português</language>" +
+    "\n<type>dataset</type>" +
+    "\n<title>Plano de amostragem por área</title>" +
+    "\n<abstract>" +
+    abstract_1o +
+    "\n" + 
+    "\nCamada selecionada (AOI): " + str(aoi) + 
+    #if dimensao_grade > 0:
+    "\nTamanho área de inspeção: " + str(float(dimensao_grade)*float(dimensao_grade)) + "km2" + 
+    "\nVersão do QGIS: " + str(Qgis.QGIS_VERSION) + 
+    "\n" + 
+    abstract_2o +
+    "\n" +
+    "\n</abstract>" +
+        "\n  <contact>" +
+    "\n    <name></name>" +
+    "\n    <organization></organization>" +
+    "\n    <position></position>" +
+    "\n    <voice></voice>" +
+    "\n    <fax></fax>" +
+    "\n    <email></email>" +
+    "\n    <role></role>" +
+    "\n  </contact>" +
+    "\n  <links/>" +
+    "\n  <fees></fees>" +
+    "\n  <encoding></encoding>" +
+    "\n  <crs>" +
+    "\n    <spatialrefsys>" +
+    "\n      <wkt></wkt>" +
+    "\n      <proj4></proj4>" +
+    "\n      <srsid></srsid>" +
+    "\n      <srid></srid>" +
+    "\n      <authid></authid>" +
+    "\n      <description></description>" +
+    "\n      <projectionacronym></projectionacronym>" +
+    "\n      <ellipsoidacronym></ellipsoidacronym>" +
+    "\n      <geographicflag></geographicflag>" +
+    "\n    </spatialrefsys>" +
+    "\n  </crs>" +
+    "\n  <extent>" +
+    "\n    <spatial/>" +
+    "\n    <temporal>" +
+    "\n      <period>" +
+    "\n        <start></start>" +
+    "\n        <end></end>" +
+    "\n      </period>" +
+    "\n    </temporal>" +
+    "\n  </extent>" +
+    "\n</qgis>"
+    )
+    return qmd_metadado
+
+
+
 def msg_complete(pop_size, sample_size, mensagem):
-    QMessageBox.about(None, "Simple random sampling", str(mensagem) + 
+    QMessageBox.about(None, "Sample by area", str(mensagem) + 
     "\n N = " + str(pop_size)+ 
     "\n n = " + str(sample_size) 
     )
@@ -443,6 +679,159 @@ def id_nivel_inspecao(nivel_inspecao):
 def id_tipo_inspecao(tipo_inspecao):
     tipo_inspecao_id = List_tipo_inspecao[tipo_inspecao]
     return tipo_inspecao_id
+
+####################
+# Sample by area #
+
+def truncate(f, n):
+#Truncates/pads a float f to n decimal places without rounding
+    s = '{}'.format(f)
+    if 'e' in s or 'E' in s:
+        return '{0:.{1}f}'.format(f, n)
+    i, p, d = s.partition('.')
+    return '.'.join([i, (d+'0'*n)[:n]])
+
+def size_of_grid(size, units_id):
+#Convert km to layer units measurement / Converte a distance em km para a unidade de medida do layer
+    d=QgsDistanceArea()
+    grid_size = 0.0 # Initial value of cell size / valor inicial do grid em km
+    try: 
+        size = float(size)
+    except ValueError:
+        QMessageBox.critical(None, "Size of inspection area", "Please enter a numerical value")
+    if type(size) is not str:
+        distance = abs(size)
+        k = d.convertLengthMeasurement(1, uKilometers)
+        #grid_size = 1.0000
+        if units_id==uUnknownDistanceUnit:
+            QMessageBox.critical(None, "Alert", "Layer with unknown unit of measure") 
+        if units_id!=uUnknownDistanceUnit:
+            grid_size = truncate(float(d.convertLengthMeasurement(distance/k, units_id)), 4)            
+    return grid_size 
+
+def grid_square(selection, nivel_inspecao, lqa, tipo_inspecao, size):
+    ##############################
+    # Data provider from selection 
+    dp = selection.dataProvider()
+    geometry = 6 #'MultiPolygon' 
+    crs = dp.crs()
+    encoding = dp.encoding()
+    units = (QgsUnitTypes.toString(crs.mapUnits()))
+    units_id = (selection.dataProvider().crs().mapUnits())
+    ############################
+    #Data source
+    ds = ogr.GetDriverByName("Esri Shapefile")
+            
+    # Function size of grid
+    grid = size_of_grid(size, units_id)
+    grid_size = float(grid)
+
+    # Data features from selection 
+    lyrInput = selection
+            
+    fields = QgsFields() # utilizar na inspecao por area 
+    fields.append(QgsField("id_measure", QVariant.Int))
+    fields.append(QgsField("checked", QVariant.String))
+    fields.append(QgsField("status", QVariant.String))
+
+    # #File created
+    # file = QgsVectorFileWriter(filename, encoding, fields, geometry, crs, ds.name)
+    #Temporary layer
+    lyrIntermediate=QgsVectorLayer("Polygon"+"?crs="+str(crs.authid()),"temporary_polygons","memory")
+    lyrIntermediate.setCrs(lyrInput.crs())
+
+    # Sampling plans # Plano de amostragem
+    Nivel_de_Inspecao = nivel_inspecao
+            
+    #Function Grid
+    xmin,ymin,xmax,ymax = lyrInput.extent().toRectF().getCoords()
+    gridWidth = grid_size #Size of cell grid / Tamanho da celula da grade
+    gridHeight = grid_size #Size of cell grid / Tamanho da celula da grade
+            
+    rows = ceil((ymax-ymin)/gridHeight)
+    cols = ceil((xmax-xmin)/gridWidth)
+    ringXleftOrigin = xmin
+    ringXrightOrigin = xmin + gridWidth
+    ringYtopOrigin = ymax
+    ringYbottomOrigin = ymax-gridHeight
+
+    id=1
+    for i in range(int(cols)):
+        ringYtop = ringYtopOrigin
+        ringYbottom =ringYbottomOrigin
+        for j in range(int(rows)):
+            points = [QgsPointXY(ringXleftOrigin, ringYtop),QgsPointXY(ringXrightOrigin, ringYtop),QgsPointXY(ringXrightOrigin, ringYbottom), QgsPointXY(ringXleftOrigin, ringYbottom), QgsPointXY(ringXleftOrigin, ringYtop)] 
+            request = QgsFeatureRequest(QgsRectangle(ringXleftOrigin,ringYtop,ringXrightOrigin,ringYbottom))
+            for feature in  lyrInput.getFeatures(request):
+                square = QgsFeature()
+                square.setGeometry(QgsGeometry.fromPolygonXY([points]))
+                square.setAttributes([id])
+                perc = id / (cols * rows * 100)
+                lyrIntermediate.dataProvider().addFeatures([square])
+                lyrIntermediate.updateExtents()
+                id = id + 1
+                break
+            ringYtop = ringYtop - gridHeight
+            ringYbottom = ringYbottom - gridHeight
+        ringXleftOrigin = ringXleftOrigin + gridWidth
+        ringXrightOrigin = ringXrightOrigin + gridWidth
+
+    # Sample size # Tamanho da amostra 
+    layer = lyrIntermediate
+    layer.setCrs(lyrInput.crs())
+    features = QgsVectorLayer.getFeatures(lyrIntermediate)
+    featureCount = len(lyrIntermediate)
+    ############################
+    N, n, num_aceitacao, letra_codigo_i, letra_codigo_f, msg = sample_plan (featureCount, nivel_inspecao, lqa + 4 , tipo_inspecao)
+    sample_size = n
+    ############################            
+    #Systematic sampling #Amostragem sistematica
+    randomNum, isSelectedId = sistematic_sample(N, n)
+    
+    return isSelectedId, features, N, n, num_aceitacao, letra_codigo_i, letra_codigo_f, msg
+
+'''    
+    randomNum = random.sample(range(N),1)[0]
+    step= N // sample_size
+    module = randomNum % step
+
+    listIds=range(featureCount) 
+    isSelectedId = []
+    x = 1
+    for i in listIds:
+        if x <= sample_size: 
+            if (i) % step == module:
+                isSelectedId.append(i)
+                x += 1   
+'''
+
+
+ ##########################################################   
+
+'''
+    sistematic_sample(N,n)
+
+    N, n, num_aceitacao, letra_codigo_i, letra_codigo_f, msg = sample_plan (featureCount, nivel_inspecao, lqa + 4 , tipo_inspecao)
+    sample_size = n
+    ############################            
+    #Systematic sampling #Amostragem sistematica
+    randomNum = random.sample(range(N),1)[0]
+    step= N // sample_size
+    module = randomNum % step
+
+    listIds=range(featureCount) 
+    isSelectedId = []
+    x = 1
+    for i in listIds:
+        if x <= sample_size: 
+            if (i) % step == module:
+                isSelectedId.append(i)
+                x += 1   
+
+    return isSelectedId, features, N, n, num_aceitacao, letra_codigo_i, letra_codigo_f, msg
+
+ ##########################################################   
+'''
 
 """
 ### Begin simulation to python terminal

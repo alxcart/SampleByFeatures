@@ -31,8 +31,11 @@ import os.path
 from osgeo import ogr
 import random
 
-from .constants import * # constants of project
+#from .constants import * # constants of project
 from .main_sample_plan import * # functions of project
+#import sys # usar no desenvolvimento #
+#sys.path.append(os.path.abspath(r"C:/Users/Admin/AppData/Roaming/QGIS/QGIS3/profiles/default/python/plugins/SampleByArea/"))
+#from main_sample_plan import *
 
 # based on the clip_multiple_layers plugin
 import processing, os, subprocess, time
@@ -291,11 +294,46 @@ class SampleByFeatures:
 ###########################################################           
             # Export results - file created and save
             pth = directory
-            output_sample(N, n, selection, pth, msg, num_aceitacao)
+#            output_sample(N, n, selection, directory, msg, num_aceitacao)
+            codigo_arquivo, nome_arquivo = output_sample(N, n, selection, directory, msg, num_aceitacao)
 
            
             if N > n:
-                msg_sample_plan( N, n, num_aceitacao, letra_codigo_i, letra_codigo_f, msg, lqa, nivel_inspecao)
+                sumario, texto_resultado = msg_sample_plan( N, n, num_aceitacao, letra_codigo_i, letra_codigo_f, msg, lqa, nivel_inspecao)
+                texto_metadado = metadado(sumario, texto_resultado, 0, selection.name(), nome_arquivo)
+                layer = QgsVectorLayer(nome_arquivo, "ogr")
+                if layer.isValid() == True:
+                    layer_sample = iface.addVectorLayer(nome_arquivo, "", "ogr")
+                    f = open (directory + "/" + layer_sample.name() + ".qmd", "w+")
+                    f.write(texto_metadado)
+                    f.close()
+                    # criar função define_style
+                    dir_style = os.path.dirname(__file__)
+                    ###
+                    #layer_sample = iface.addVectorLayer(nome_arquivo, "", "ogr")
+                    if layer_sample.wkbType() == 1001 or layer_sample.wkbType() == 1:#QgsWkbTypes.Point:
+                        style = dir_style + '/sample_point_style.qml' 
+                    if layer_sample.wkbType() == 1005 or layer_sample.wkbType() == 5:#QgsWkbTypes.LineString:
+                        style = dir_style + '/sample_line_style.qml' 
+                    if layer_sample.wkbType() == 1006 or layer_sample.wkbType() == 6:#QgsWkbTypes.Polygon: 
+                        style = dir_style + '/sample_area_style.qml' 
+                    # Load and Save Style (QML)
+                    layer_sample.loadNamedStyle(style)
+                    #layer_sample.saveNamedStyle(directory + "/sample_area_" + codigo_arquivo + ".qml")
+                    layer_sample.saveNamedStyle(directory + "/" + layer_sample.name() +".qml")
+                    #layer_sample.featureCount()
+                    layer_sample.loadNamedMetadata(directory + "/" + layer_sample.name() + ".qmd")
+                    QMessageBox.about(None, "Sample by area", sumario) 
+                if layer.isValid() == False:
+                    QMessageBox.warning(None, "Sample by feature", "O arquivo " + 
+                                        codigo_arquivo + " já existe na pasta.\n" +
+                                        "\n   Por favor, alterar os parâmetros do plano de amostragem" +
+                                        "\nou selecionar uma nova pasta.\n"
+                                        )                                
+                
+                # carregar metadado neste momento.                 
+                                
+                #msg_sample_plan( N, n, num_aceitacao, letra_codigo_i, letra_codigo_f, msg, lqa, nivel_inspecao)
         
             if N <= n:
                 msg_complete( N, n, msg) 

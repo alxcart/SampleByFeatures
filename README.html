@@ -1,42 +1,28 @@
 <html>
 <body>
-<h3>Plugin Builder Results</h3>
+<h3>Sampling plan by features</h3>
 
-Congratulations! You just built a plugin for QGIS!<br/><br />
+Plugin developed based on ISO 19157 and ISO 2859 standards<br/><br />
 
 <div id='help' style='font-size:.9em;'>
-Your plugin <b>SampleByFeatures</b> was created in:<br>
-&nbsp;&nbsp;<b>E:/GoogleDrive/Projetos_2021/EuProgramador/Plugin_Builder/Em_trabalho/04abril2021\samplebyfeatures</b>
-<p>
-Your QGIS plugin directory is located at:<br>
-&nbsp;&nbsp;<b>C:/Users/alxca/AppData/Roaming/QGIS/QGIS3/profiles/default/python/plugins</b>
-<p>
-<h3>What's Next</h3>
+<h3>Plugin features</h3>
 <ol>
-    <li>If resources.py is not present in your plugin directory, compile the resources file using pyrcc5 (simply use <b>pb_tool</b> or <b>make</b> if you have automake)
-    <li>Optionally, test the generated sources using <b>make test</b> (or run tests from your IDE)
-    <li>Copy the entire directory containing your new plugin to the QGIS plugin directory (see Notes below)
-    <li>Test the plugin by enabling it in the QGIS plugin manager
-    <li>Customize it by editing the implementation file <b>SampleByFeatures.py</b>
-    <li>Create your own custom icon, replacing the default <b>icon.png</b>
-    <li>Modify your user interface by opening <b>SampleByFeatures_dialog_base.ui</b> in Qt Designer
+    <li>The sampling plan is drawn on the layer of interest. The geometry type of the layer can be point, line, or area.
+    <li>The sample size (n) is determined by the total number of register (N) in the layer of interest.
 </ol>
-Notes:
+<b>Notes:</b>
 <ul>
-    <li>You can use <b>pb_tool</b> to compile, deploy, and manage your plugin. Tweak the <i>pb_tool.cfg</i> file included with your plugin as you add files. Install <b>pb_tool</b> using 
-        <i>pip</i> or <i>easy_install</i>. See <b>http://loc8.cc/pb_tool</b> for more information.
-    <li>You can also use the <b>Makefile</b> to compile and deploy when you
-        make changes. This requires GNU make (gmake). The Makefile is ready to use, however you 
-        will have to edit it to add addional Python source files, dialogs, and translations.
+    <li>Version 0.6
+
 </ul>
 </div>
 <div style='font-size:.9em;'>
 <p>
-For information on writing PyQGIS code, see <b>http://loc8.cc/pyqgis_resources</b> for a list of resources.
+For more information visit: <b>https://github.com/alxcart/SampleByFeatures</b>.
 </p>
 </div>
 <p>
-&copy;2011-2019 GeoApt LLC - geoapt.com 
+&copy;Alex Santos (2019) 
 </p>
 </body>
 </html>

@@ -250,7 +250,7 @@ class SampleByFeatures:
         layers = QgsProject.instance().mapLayers().values()
         for layer in layers:
             if layer.type() == QgsMapLayer.VectorLayer :
-                if layer.isValid()==True:
+                if layer.isValid()==True and layer.__len__()>=1: # layer valido e com pelo menos 1 registro
                     self.dlg.comboBox.addItem(layer.name(), layer )
 
         # show the dialog

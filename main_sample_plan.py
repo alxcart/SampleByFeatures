@@ -406,7 +406,7 @@ def list_layers():
     layers = QgsProject.instance().mapLayers().values()
     for layer in layers:
         if layer.type() == 1 :
-            if layer.isValid()==True:
+            if layer.isValid()==True and layer.__len__()>=1: # layer valido e com pelo menos 1 registro:
                 self.dlg.comboBox.addItem( layer.name(), layer )
     return layers 
 
@@ -538,13 +538,24 @@ def output_sample_grade(pop_size, sample_size, selection, directory, grade, isSe
                 texto_ac_re = "_NA_"
             if Ac == "Utilizar plano de amostragem simples indicado acima" or Ac == "Aceitação não permitida com o tamanho de amostra indicado":
                 texto_ac_re = "_NA_"           
-        texto_id_file = (str(sample_size)  + tipo + texto_ac_re)
-        filename = os.path.join(directory + "/sample_area_" + texto_id_file + ".shp")
+        #texto_id_file = (str(sample_size)  + tipo + texto_ac_re)
+        #filename = os.path.join(directory + "/sample_area_" + texto_id_file + ".shp")
         #filename_gpkg = os.path.join(directory + "/sample_area_" + texto_id_file + ".gpkg")
-        ds = ogr.GetDriverByName("Esri Shapefile")
+        #ds = ogr.GetDriverByName("Esri Shapefile")
         # Testar a existência do arquivo shapefile
-        file = QgsVectorFileWriter(filename, encoding, fields, geometry, crs, ds.name)
+        #file = QgsVectorFileWriter(filename, encoding, fields, geometry, crs, ds.name)
         #file_gpkg = QgsVectorFileWriter(filename_gpkg, encoding, crs, "GPKG")       
+        tx_data = data_sample()
+        texto_id_file = (str(sample_size)  + tipo) # + "_" + str(tx_data))
+        #filename = os.path.join(directory + "/sample_area_" + texto_id_file + ".shp")
+        filename = os.path.join(directory + "/sample_feature_" + texto_id_file + "_" + str(tx_data) + str(".gpkg"))
+        #filename = os.path.join(directory + "/sample_" + str(sample_size) + tipo + selection.name() + str(".gpkg"))
+        lyrIntermediate=QgsVectorLayer(geometry +"?crs="+str(crs.authid()),"","memory")
+        lyrIntermediate.setCrs(crs)
+        file = lyrIntermediate.dataProvider()
+        fields = add_fields_by_area(file)
+        lyrIntermediate.dataProvider().addAttributes(fields)
+        lyrIntermediate.updateFields()
 
         for i, feat in enumerate(grade):
             if i in isSelectedId:
@@ -552,7 +563,7 @@ def output_sample_grade(pop_size, sample_size, selection, directory, grade, isSe
         del file
         
 
-        return texto_id_file, filename
+        return texto_id_file, filename, lyrIntermediate
               
 def msg_sample_plan(pop_size, sample_size, num_aceitacao, letra_codigo_i, letra_codigo_f, mensagem, lqa, nivel_inspecao):
     if mensagem == "inspeção amostral simples":
@@ -789,6 +800,65 @@ def grid_square(selection, nivel_inspecao, lqa, tipo_inspecao, size):
     randomNum, isSelectedId = sistematic_sample(N, n)
     
     return isSelectedId, features, N, n, num_aceitacao, letra_codigo_i, letra_codigo_f, msg
+
+def get_layer():
+    # get layer list
+    lyrs = iface.layerTreeView().selectedLayers() # apenas o layer selecionado
+    # select layer
+    lyr_selected = lyrs[0]
+    return lyr_selected
+
+def data_sample():
+    import datetime
+    from datetime import date, datetime
+    # data geopakage
+    data = datetime.now()
+    ano = data.year
+    mes = data.month
+    dia = data.day
+    hora = data.hour
+    minuto = data.minute
+    segundo = data.second
+    tx_data = str(ano)+str(mes)+str(dia)+str(hora)+str(minuto)+str(segundo)
+    return tx_data
+    
+
+def save_gpkg(camada, filename, texto_id_file ):
+    options = QgsVectorFileWriter.SaveVectorOptions()
+    options.driverName = "GPKG"
+    classe_ocorrencia = camada_virtual()
+    class_notes = classe_ocorrencia
+    options.layerName = "sample_area" + "_" +  str(texto_id_file)
+    #options.layerName = camada.name()
+    options.actionOnExistingFile = QgsVectorFileWriter.CreateOrOverwriteFile
+    options.fileEncoding = "utf-8"
+    #options.onlySelected = True
+    QgsVectorFileWriter.writeAsVectorFormat(camada, filename, options)
+    #QgsVectorFileWriter.writeAsVectorFormat(class_notes, filename, options)
+    options.actionOnExistingFile = QgsVectorFileWriter.CreateOrOverwriteLayer
+    options.layerName = class_notes.name()    
+    QgsVectorFileWriter.writeAsVectorFormat(class_notes, filename, options)
+    #QgsVectorFileWriter.writeAsVectorFormat(camada, filename, options)
+    
+# classe ocorrencia (inspecao_p)
+def camada_virtual():
+    # Criar uma definição de campos vazios
+    fields = QgsFields()
+    #fields.append(QgsField('id', QVariant.int))
+    fields.append(QgsField('id_measure', QVariant.String))
+    fields.append(QgsField('layer', QVariant.String))
+    fields.append(QgsField('var_1', QVariant.String))
+    fields.append(QgsField('var_2', QVariant.String))
+    fields.append(QgsField('tx_report', QVariant.String))
+    
+    
+    # Criar uma camada virtual vazia
+    #virtual_layer = QgsVectorLayer('Point?crs=EPSG:4674&field=id:integer', 'inspecao_p', 'memory')
+    virtual_layer = QgsVectorLayer('Point?crs=EPSG:4674', 'inspecao_p', 'memory')
+    virtual_layer.dataProvider().addAttributes(fields)
+    virtual_layer.updateFields()
+    camada = virtual_layer
+    return camada
 
 '''    
     randomNum = random.sample(range(N),1)[0]

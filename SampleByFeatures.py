@@ -250,7 +250,7 @@ class SampleByFeatures:
         layers = QgsProject.instance().mapLayers().values()
         for layer in layers:
             if layer.type() == QgsMapLayer.VectorLayer :
-                if layer.isValid()==True:
+                if layer.isValid()==True and layer.__len__()>=1: # layer valido e com pelo menos 1 registro
                     self.dlg.comboBox.addItem(layer.name(), layer )
 
         # show the dialog
@@ -295,49 +295,96 @@ class SampleByFeatures:
             # Export results - file created and save
             pth = directory
 #            output_sample(N, n, selection, directory, msg, num_aceitacao)
-            codigo_arquivo, nome_arquivo = output_sample(N, n, selection, directory, msg, num_aceitacao)
+            codigo_arquivo, nome_arquivo, amostra_virtual = output_sample(N, n, selection, directory, msg, num_aceitacao)
 
-           
+            #codigo_arquivo, nome_arquivo, amostra_virtual = output_sample_grade (N, n, selection, directory, features, isSelectedId, msg, num_aceitacao)
+            filename = nome_arquivo
+            ly_virtual = amostra_virtual
+            size = selection.__len__()
+
             if N > n:
                 sumario, texto_resultado = msg_sample_plan( N, n, num_aceitacao, letra_codigo_i, letra_codigo_f, msg, lqa, nivel_inspecao)
-                texto_metadado = metadado(sumario, texto_resultado, 0, selection.name(), nome_arquivo)
-                layer = QgsVectorLayer(nome_arquivo, "ogr")
+                texto_metadado = metadado(sumario, texto_resultado, size, selection.name(), nome_arquivo)
+                save_gpkg(ly_virtual, filename, codigo_arquivo)  
+
+                layer = QgsVectorLayer(nome_arquivo, "sample_feature_" + str(codigo_arquivo) ,"ogr")
                 if layer.isValid() == True:
-                    layer_sample = iface.addVectorLayer(nome_arquivo, "", "ogr")
-                    f = open (directory + "/" + layer_sample.name() + ".qmd", "w+")
+                    f = open (directory + "/sample_feature_" + codigo_arquivo + ".qmd", "w+")
                     f.write(texto_metadado)
                     f.close()
                     # criar função define_style
-                    dir_style = os.path.dirname(__file__)
-                    ###
-                    #layer_sample = iface.addVectorLayer(nome_arquivo, "", "ogr")
-                    if layer_sample.wkbType() == 1001 or layer_sample.wkbType() == 1:#QgsWkbTypes.Point:
-                        style = dir_style + '/sample_point_style.qml' 
-                    if layer_sample.wkbType() == 1005 or layer_sample.wkbType() == 5:#QgsWkbTypes.LineString:
-                        style = dir_style + '/sample_line_style.qml' 
-                    if layer_sample.wkbType() == 1006 or layer_sample.wkbType() == 6:#QgsWkbTypes.Polygon: 
-                        style = dir_style + '/sample_area_style.qml' 
-                    # Load and Save Style (QML)
-                    layer_sample.loadNamedStyle(style)
-                    #layer_sample.saveNamedStyle(directory + "/sample_area_" + codigo_arquivo + ".qml")
-                    layer_sample.saveNamedStyle(directory + "/" + layer_sample.name() +".qml")
-                    #layer_sample.featureCount()
-                    layer_sample.loadNamedMetadata(directory + "/" + layer_sample.name() + ".qmd")
-                    QMessageBox.about(None, "Sample by area", sumario) 
+                    dir_style = os.path.dirname(__file__) # 'C:\\Users/Admin/AppData/Roaming/QGIS/QGIS3\\profiles\\default/python/plugins\\SampleByArea'
+                    style = (dir_style + '/sample_feature_.qml')
+                    style_inspecao_p = (dir_style + '/inspecao_p.qml')
+                    layer_sample = iface.addVectorLayer(nome_arquivo, "" ,"ogr")
+                    # Definir o caminho para o arquivo Geopackage
+                    #geopackage_path = filename
+
+                    # Definir o nome da camada e o nome do estilo
+                    layer_name = "sample_" + codigo_arquivo
+                    layer_inspecao = "inspecao_p"
+                    #style sample area
+                    project = QgsProject.instance()
+                    #layer = project.mapLayersByName(layer_name)#[0]
+                    #layer.loadNamedStyle(style)
+                    #layer.saveNamedStyle(directory + "/sample_" + codigo_arquivo + ".qml") 
+                    #success = layer.saveStyleToDatabase(style, "sample", QgsStyle.UseLayerName)
+
+                    #style inspecao pontual
+                    inspecao_p_style = project.mapLayersByName(layer_inspecao)[0]
+                    inspecao_p_style.loadNamedStyle(style_inspecao_p)
+                    inspecao_p_style.saveNamedStyle(directory + "/inspecao_p.qml")
+                    #style_manager = QgsMapLayerStyleManager(str(qml_path+ "/sample_area_" + codigo_arquivo + ".qml"))
+                    #style_manager.saveStyleToDatabase(style_name, geopackage_path)
+                    
+                    # Obter o objeto QgsProject
+                    # project = QgsProject.instance()
+                    
+                    # # Verificar se a camada existe no projeto
+                    # if layer_name in project.mapLayers():
+                    #     # Obter a camada
+                    #     layer = project.mapLayersByName(layer_name)[0]
+
+                    #     # Obter o nome do estilo da camada
+                    #     layer_style_name = layer.styleManager().currentStyle()
+
+                    #     # Verificar se o estilo atual existe
+                    #     if layer_style_name:
+                    #         # Obter o caminho para o arquivo QML do estilo
+                    #         qml_path = layer.styleManager().styleUri(layer_style_name)
+                    #         #qml_path = directory + "/sample_area_" + codigo_arquivo + ".qml"
+
+                    #         # Carregar o estilo do arquivo QML
+                    #         style_manager = QgsMapLayerStyleManager(qml_path)
+
+                    #         # Salvar o estilo no Geopackage
+                    #         style_manager.saveStyleToDatabase(style_name, geopackage_path)
+
+                    #         #print("Estilo salvo com sucesso no Geopackage.")
+                    #         QMessageBox.about(None, "Style Manager 1", "Estilo salvo com sucesso no Geopackage.")
+                    #     else:
+                    #         #print("Nenhum estilo definido para a camada.")
+                    #         QMessageBox.about(None, "Style Manager 2", "Nenhum estilo definido para a camada.")
+                    # else:
+                    #     #print("Camada não encontrada no projeto.")
+                    #     QMessageBox.about(None, "Style Manager 3", "Camada não encontrada no projeto.")
+                    # '''
+
+
+                    #layer_sample.saveNamedStyleToDatabase(filename, style_chat) # + "/sample_area_" + codigo_arquivo + ".qml")
+                    
+                    QMessageBox.about(None, "Sample by feature", sumario)
                 if layer.isValid() == False:
                     QMessageBox.warning(None, "Sample by feature", "O arquivo " + 
                                         codigo_arquivo + " já existe na pasta.\n" +
                                         "\n   Por favor, alterar os parâmetros do plano de amostragem" +
                                         "\nou selecionar uma nova pasta.\n"
-                                        )                                
-                
-                # carregar metadado neste momento.                 
-                                
-                #msg_sample_plan( N, n, num_aceitacao, letra_codigo_i, letra_codigo_f, msg, lqa, nivel_inspecao)
-        
+                                        )
+
+                # carregar metadado neste momento. 
+                # checar existencia do arquivo antes de escrever. Atualmente, o anterior é perdido. 
+                #Carregar camada
+                #QgsProject.instance().addMapLayer(ly)
+                           
             if N <= n:
-                msg_complete( N, n, msg) 
-
-############################
-############################      
-
+                msg_complete( N, n, msg)

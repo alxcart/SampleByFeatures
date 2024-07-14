@@ -417,6 +417,7 @@ def data_provider(feature_selected):
     dp = feature_selected.dataProvider()
     provider = dp       ###
     geometry = feature_selected.wkbType()
+    geom_type_str = QgsWkbTypes.displayString(geometry)
     crs = provider.crs()
     encoding = dp.encoding()
     return features, dp, provider, geometry, crs, encoding 
@@ -459,6 +460,7 @@ def output_sample(pop_size, sample_size, selection, directory, mensagem, num_ace
     if pop_size > sample_size:
         isSelectedId = sample_features(pop_size, sample_size)
         features, dp, provider, geometry, crs, encoding  = data_provider(selection)
+        geom_type_str = QgsWkbTypes.displayString(geometry)
         fields = add_fields(dp)
         tipo = "C"
         if mensagem == "inspeção amostral simples":
@@ -489,8 +491,9 @@ def output_sample(pop_size, sample_size, selection, directory, mensagem, num_ace
                 texto_ac_re = "_NA_"
             if Ac == "Utilizar plano de amostragem simples indicado acima" or Ac == "Aceitação não permitida com o tamanho de amostra indicado":
                 texto_ac_re = "_NA_"        
+        '''
         texto_id_file = (str(sample_size)  + tipo + texto_ac_re)
-        filename = os.path.join(directory + "/sample_" + str(sample_size) + tipo + texto_ac_re + selection.name() +".shp")
+        #filename = os.path.join(directory + "/sample_" + str(sample_size) + tipo + texto_ac_re + selection.name() +".shp")
         ds = ogr.GetDriverByName("Esri Shapefile")
 
         file = QgsVectorFileWriter(filename, encoding, fields, geometry, crs, ds.name)
@@ -501,7 +504,28 @@ def output_sample(pop_size, sample_size, selection, directory, mensagem, num_ace
         del file
            
         # iface.addVectorLayer(filename, "", "ogr")
-        return texto_id_file, filename
+        '''
+        tx_data = data_sample()
+        texto_id_file = (str(sample_size)  + tipo) # + "_" + str(tx_data))
+        #filename = os.path.join(directory + "/sample_area_" + texto_id_file + ".shp")
+        filename = os.path.join(directory + "/sample_feature_" + texto_id_file + "_" + str(tx_data) + str(".gpkg"))
+        #filename = os.path.join(directory + "/sample_" + str(sample_size) + tipo + selection.name() + str(".gpkg"))
+        lyrIntermediate=QgsVectorLayer(str(geom_type_str)+"?crs="+str(crs.authid()),"","memory")
+        lyrIntermediate.setCrs(crs)
+        file = lyrIntermediate.dataProvider()
+        #fields = add_fields_by_area(file) - FIELDS BY AREA
+        #fields = add_fields(dp) - FIELDS BY FEATURE (SELECTION USER)
+        lyrIntermediate.dataProvider().addAttributes(fields)
+        lyrIntermediate.updateFields()
+
+        for i, feat in enumerate(features):
+            if i in isSelectedId:
+                file.addFeature(feat)
+        del file
+        
+
+        return texto_id_file, filename, lyrIntermediate
+        #return texto_id_file, filename
 
 def output_sample_grade(pop_size, sample_size, selection, directory, grade, isSelectedId, mensagem, num_aceitacao): 
     if pop_size > sample_size:
@@ -823,7 +847,7 @@ def data_sample():
     return tx_data
     
 
-def save_gpkg(camada, filename, texto_id_file ):
+def save_gpkg(camada, filename, texto_id_file ): ### SALVAR CAMADA GEOPACKGE GPKG ###
     options = QgsVectorFileWriter.SaveVectorOptions()
     options.driverName = "GPKG"
     classe_ocorrencia = camada_virtual()

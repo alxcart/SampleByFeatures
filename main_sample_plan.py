@@ -852,7 +852,7 @@ def save_gpkg(camada, filename, texto_id_file ): ### SALVAR CAMADA GEOPACKGE GPK
     options.driverName = "GPKG"
     classe_ocorrencia = camada_virtual()
     class_notes = classe_ocorrencia
-    options.layerName = "sample_area" + "_" +  str(texto_id_file)
+    options.layerName = "sample_" + "_" +  str(texto_id_file)
     #options.layerName = camada.name()
     options.actionOnExistingFile = QgsVectorFileWriter.CreateOrOverwriteFile
     options.fileEncoding = "utf-8"

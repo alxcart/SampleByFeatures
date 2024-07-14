@@ -321,13 +321,14 @@ class SampleByFeatures:
                     #geopackage_path = filename
 
                     # Definir o nome da camada e o nome do estilo
-                    layer_name = "sample_feature_" + codigo_arquivo
+                    layer_name = "sample_" + codigo_arquivo
                     layer_inspecao = "inspecao_p"
                     #style sample area
                     project = QgsProject.instance()
-                    layer = project.mapLayersByName(layer_name)#[0]
-                    layer.loadNamedStyle(style)
-                    layer.saveNamedStyle(directory + "/sample_feature_" + codigo_arquivo + ".qml") 
+                    #layer = project.mapLayersByName(layer_name)#[0]
+                    #layer.loadNamedStyle(style)
+                    #layer.saveNamedStyle(directory + "/sample_" + codigo_arquivo + ".qml") 
+                    #success = layer.saveStyleToDatabase(style, "sample", QgsStyle.UseLayerName)
 
                     #style inspecao pontual
                     inspecao_p_style = project.mapLayersByName(layer_inspecao)[0]

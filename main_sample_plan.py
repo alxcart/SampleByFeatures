@@ -11,6 +11,8 @@ import random
 import os.path
 from math import ceil # size of cell - sample by area
 #from .constants import * # constants of project
+#ATIVO = "area"
+ATIVO = "feature"
 
 """
 # Sampling plan / Plano de amostragem
@@ -475,6 +477,7 @@ def sample_features(pop_size, sample_size):
     return isSelectedId
 
 #################################################
+#################################################
 def output_sample_plan(pop_size, sample_size, selection, directory, grade, isSelectedId, mensagem, num_aceitacao, ATIVO): 
     if pop_size > sample_size:
         features, dp, provider, geometry, crs, encoding  = data_provider(selection)
@@ -487,6 +490,8 @@ def output_sample_plan(pop_size, sample_size, selection, directory, grade, isSel
                 
         if ATIVO == "area":
             geometry = 6 #'MultiPolygon' 
+            geom_type_str = QgsWkbTypes.displayString(geometry)
+            fields = add_fields_by_area(file)
         
         #fields = add_fields_by_area(dp)
         tipo = "C"
@@ -522,12 +527,12 @@ def output_sample_plan(pop_size, sample_size, selection, directory, grade, isSel
         tx_data = data_sample()
         texto_id_file = (str(sample_size)  + tipo) # + "_" + str(tx_data))
         #filename = os.path.join(directory + "/sample_area_" + texto_id_file + ".shp")
-        filename = os.path.join(directory + "/sample_area_" + texto_id_file + "_" + str(tx_data) + str(".gpkg"))
+        filename = os.path.join(directory + "/sample_" + str(ATIVO) + "_" + texto_id_file + "_" + str(tx_data) + str(".gpkg"))
         #filename = os.path.join(directory + "/sample_" + str(sample_size) + tipo + selection.name() + str(".gpkg"))
-        lyrIntermediate=QgsVectorLayer("MultiPolygon"+"?crs="+str(crs.authid()),"","memory")
+        lyrIntermediate=QgsVectorLayer(str(geom_type_str)+"?crs="+str(crs.authid()),"","memory")
         lyrIntermediate.setCrs(crs)
         file = lyrIntermediate.dataProvider()
-        fields = add_fields_by_area(file)
+        
         lyrIntermediate.dataProvider().addAttributes(fields)
         lyrIntermediate.updateFields()        
 
@@ -936,7 +941,7 @@ def save_gpkg(camada, filename, texto_id_file ): ### SALVAR CAMADA GEOPACKGE GPK
     options.driverName = "GPKG"
     classe_ocorrencia = camada_virtual()
     class_notes = classe_ocorrencia
-    options.layerName = "sample_" + "_" +  str(texto_id_file)
+    options.layerName = "/sample_" + str(ATIVO) + "_" +  str(texto_id_file)
     #options.layerName = camada.name()
     options.actionOnExistingFile = QgsVectorFileWriter.CreateOrOverwriteFile
     options.fileEncoding = "utf-8"

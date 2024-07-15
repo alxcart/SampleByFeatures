@@ -49,8 +49,6 @@ from .resources import *
 from .SampleByFeatures_dialog import SampleByFeaturesDialog
 import os.path
 
-
-
 class SampleByFeatures:
     """QGIS Plugin Implementation."""
 
@@ -272,7 +270,7 @@ class SampleByFeatures:
                 QMessageBox.critical(None, "Folder not found", "Please select folder")
                 return True
 
-            directory = self.folderName + "/sample_features"
+            directory = self.folderName + "/sample_" + str(ATIVO) 
             if not os.path.exists(directory):
                 os.makedirs(directory)
             
@@ -286,8 +284,7 @@ class SampleByFeatures:
             tipo_inspecao = self.dlg.comboBoxType.currentIndex()
             lqa = self.dlg.comboBoxLQA.currentIndex()
             
-            #ATIVO = "area"
-            ATIVO = "feature"
+
             
             ###########  Sample by area ###############################   
             if ATIVO =="area": 
@@ -313,9 +310,9 @@ class SampleByFeatures:
                 texto_metadado = metadado(sumario, texto_resultado, size, selection.name(), nome_arquivo)
                 save_gpkg(ly_virtual, filename, codigo_arquivo)  
 
-                layer = QgsVectorLayer(nome_arquivo, "sample_feature_" + str(codigo_arquivo) ,"ogr")
+                layer = QgsVectorLayer(nome_arquivo, "sample_" + str(ATIVO) + "_" + str(codigo_arquivo) ,"ogr")
                 if layer.isValid() == True:
-                    f = open (directory + "/sample_feature_" + codigo_arquivo + ".qmd", "w+")
+                    f = open (directory + "/sample_" + str(ATIVO) + "_" + codigo_arquivo + ".qmd", "w+")
                     f.write(texto_metadado)
                     f.close()
                     # criar função define_style
@@ -327,18 +324,18 @@ class SampleByFeatures:
                     #geopackage_path = filename
 
                     # Definir o nome da camada e o nome do estilo
-                    layer_name = "sample_feature" + codigo_arquivo
+                    layer_name = "sample_" + str(ATIVO) + codigo_arquivo
                     layer_inspecao = "inspecao_p"
                     #style sample area
                     project = QgsProject.instance()
                     #layer = project.mapLayersByName(layer_name)[0]
                     layer.loadNamedStyle(style)
-                    layer.saveNamedStyle(directory + "/sample_feature_" + codigo_arquivo + ".qml") 
+                    layer.saveNamedStyle(directory + "/sample_" + str(ATIVO) + "_" + codigo_arquivo + ".qml") 
                     #success = layer.saveStyleToDatabase(style, "sample", QgsStyle.UseLayerName)
                     #style inspecao pontual
-                    inspecao_p_style = project.mapLayersByName(layer_inspecao)[0]
-                    inspecao_p_style.loadNamedStyle(style_inspecao_p)
-                    inspecao_p_style.saveNamedStyle(directory + "/inspecao_p.qml")
+                    #inspecao_p_style = project.mapLayersByName(layer_inspecao)#[0]
+                    #inspecao_p_style.loadNamedStyle(style_inspecao_p)
+                    #inspecao_p_style.saveNamedStyle(directory + "/inspecao_p.qml")
                     #style_manager = QgsMapLayerStyleManager(str(qml_path+ "/sample_area_" + codigo_arquivo + ".qml"))
                     #style_manager.saveStyleToDatabase(style_name, geopackage_path)
                                        

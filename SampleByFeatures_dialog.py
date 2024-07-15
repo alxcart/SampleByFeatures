@@ -8,7 +8,7 @@
                              -------------------
         begin                : 2021-04-02
         git sha              : $Format:%H$
-        copyright            : (C) 2021 by Alex Santos
+        copyright            : (C) 2024 by Alex Santos
         email                : alxcart@gmail.com
  ***************************************************************************/
 

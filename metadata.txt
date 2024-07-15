@@ -6,7 +6,7 @@
 name=Sample By Features
 qgisMinimumVersion=3.0
 description=The sampling plan by feature class (layer) calculates the sample size (n) from population size (N), inspection level (I, II or III) and acceptable quality limit (AQL). 
-version=0.6
+version=1.0
 author=Alex Santos
 email=alxcart@gmail.com
 

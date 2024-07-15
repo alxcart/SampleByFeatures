@@ -264,8 +264,6 @@ class SampleByFeatures:
             # Do something useful here - delete the line containing pass and
             # substitute with your code.
             #pass
-            #ATIVO = "area"
-            ATIVO = "feature"
             try: 
                 if not os.path.isdir(self.folderName):
                     raise FileNotFoundError(
@@ -289,7 +287,7 @@ class SampleByFeatures:
             lqa = self.dlg.comboBoxLQA.currentIndex()
             
             #ATIVO = "area"
-            #ATIVO = "feature"
+            ATIVO = "feature"
             
             ###########  Sample by area ###############################   
             if ATIVO =="area": 
@@ -302,26 +300,7 @@ class SampleByFeatures:
                 features = selection
                 isSelectedId = sample_features(N, n)          
 
-
-   
-            # N, n, num_aceitacao, letra_codigo_i, letra_codigo_f, msg = sample_plan (features_selection(selection), nivel_inspecao, lqa + 4 , tipo_inspecao)
-
-            # Se o numero de aceitacao for ""Utilizar plano de amostragem simples indicado acima"
-            # Mudar o tipo de inspeção de multipla ou dupla para simples
-            #if dicAc_dupla[num_aceitacao][0] == "Utilizar plano de amostragem simples indicado acima" or dicAc_multipla[num_aceitacao][0] == "Utilizar plano de amostragem simples indicado acima":
-            #    tipo_inspecao = 0   
-            #    N, n, num_aceitacao, letra_codigo_i, letra_codigo_f, msg = sample_plan (features_selection(selection), nivel_inspecao, lqa + 4 , tipo_inspecao)
-            
-###########################################################           
-            # Export results - file created and save
-            #pth = directory
-#           # output_sample(N, n, selection, directory, msg, num_aceitacao)
-            #codigo_arquivo, nome_arquivo, amostra_virtual = output_sample_plan(N, n, selection, directory, msg, num_aceitacao)
-
-            #codigo_arquivo, nome_arquivo, amostra_virtual = output_sample_grade (N, n, selection, directory, features, isSelectedId, msg, num_aceitacao)
-            #filename = nome_arquivo
-            #ly_virtual = amostra_virtual
-            #size = selection.__len__()
+  
 
             if N > n and ATIVO == 'feature':
                 #codigo_arquivo, nome_arquivo, amostra_virtual = output_sample_plan(N, n, selection, directory, msg, num_aceitacao, ATIVO)
@@ -356,50 +335,13 @@ class SampleByFeatures:
                     layer.loadNamedStyle(style)
                     layer.saveNamedStyle(directory + "/sample_feature_" + codigo_arquivo + ".qml") 
                     #success = layer.saveStyleToDatabase(style, "sample", QgsStyle.UseLayerName)
-
                     #style inspecao pontual
                     inspecao_p_style = project.mapLayersByName(layer_inspecao)[0]
                     inspecao_p_style.loadNamedStyle(style_inspecao_p)
                     inspecao_p_style.saveNamedStyle(directory + "/inspecao_p.qml")
                     #style_manager = QgsMapLayerStyleManager(str(qml_path+ "/sample_area_" + codigo_arquivo + ".qml"))
                     #style_manager.saveStyleToDatabase(style_name, geopackage_path)
-                    
-                    # Obter o objeto QgsProject
-                    # project = QgsProject.instance()
-                    
-                    # # Verificar se a camada existe no projeto
-                    # if layer_name in project.mapLayers():
-                    #     # Obter a camada
-                    #     layer = project.mapLayersByName(layer_name)[0]
-
-                    #     # Obter o nome do estilo da camada
-                    #     layer_style_name = layer.styleManager().currentStyle()
-
-                    #     # Verificar se o estilo atual existe
-                    #     if layer_style_name:
-                    #         # Obter o caminho para o arquivo QML do estilo
-                    #         qml_path = layer.styleManager().styleUri(layer_style_name)
-                    #         #qml_path = directory + "/sample_area_" + codigo_arquivo + ".qml"
-
-                    #         # Carregar o estilo do arquivo QML
-                    #         style_manager = QgsMapLayerStyleManager(qml_path)
-
-                    #         # Salvar o estilo no Geopackage
-                    #         style_manager.saveStyleToDatabase(style_name, geopackage_path)
-
-                    #         #print("Estilo salvo com sucesso no Geopackage.")
-                    #         QMessageBox.about(None, "Style Manager 1", "Estilo salvo com sucesso no Geopackage.")
-                    #     else:
-                    #         #print("Nenhum estilo definido para a camada.")
-                    #         QMessageBox.about(None, "Style Manager 2", "Nenhum estilo definido para a camada.")
-                    # else:
-                    #     #print("Camada não encontrada no projeto.")
-                    #     QMessageBox.about(None, "Style Manager 3", "Camada não encontrada no projeto.")
-                    # '''
-
-
-                    #layer_sample.saveNamedStyleToDatabase(filename, style_chat) # + "/sample_area_" + codigo_arquivo + ".qml")
-                    
+                                       
                     QMessageBox.about(None, "Sample by feature", sumario)
                 if layer.isValid() == False:
                     QMessageBox.warning(None, "Sample by feature", "O arquivo " + 

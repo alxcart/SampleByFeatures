@@ -1,133 +1,160 @@
 <!DOCTYPE qgis PUBLIC 'http://mrcc.com/qgis.dtd' 'SYSTEM'>
-<qgis symbologyReferenceScale="-1" readOnly="0" simplifyLocal="1" minScale="100000000" simplifyDrawingHints="0" simplifyAlgorithm="0" simplifyMaxScale="1" version="3.22.12-Białowieża" hasScaleBasedVisibilityFlag="0" maxScale="0" labelsEnabled="0" simplifyDrawingTol="1" styleCategories="AllStyleCategories">
+<qgis readOnly="0" simplifyDrawingHints="0" simplifyDrawingTol="1" simplifyMaxScale="1" simplifyLocal="1" hasScaleBasedVisibilityFlag="0" minScale="100000000" maxScale="0" labelsEnabled="0" version="3.16.11-Hannover" styleCategories="AllStyleCategories" simplifyAlgorithm="0">
   <flags>
     <Identifiable>1</Identifiable>
     <Removable>1</Removable>
     <Searchable>1</Searchable>
-    <Private>0</Private>
   </flags>
-  <temporal enabled="0" durationField="" limitMode="0" mode="0" startField="" endField="" startExpression="" endExpression="" durationUnit="min" fixedDuration="0" accumulate="0">
+  <temporal enabled="0" durationField="ID_ANTIGO" durationUnit="min" endField="" startField="" endExpression="" mode="0" startExpression="" fixedDuration="0" accumulate="0">
     <fixedRange>
       <start></start>
       <end></end>
     </fixedRange>
   </temporal>
-  <renderer-v2 symbollevels="0" forceraster="0" type="singleSymbol" referencescale="-1" enableorderby="0">
+  <renderer-v2 symbollevels="0" enableorderby="0" type="categorizedSymbol" forceraster="0" attr="status">
+    <categories>
+      <category render="true" label="Aprovado" symbol="0" value="1"/>
+      <category render="true" label="Reprovado" symbol="1" value="0"/>
+      <category render="true" label="Pendente" symbol="2" value=""/>
+    </categories>
     <symbols>
-      <symbol clip_to_extent="1" type="marker" name="0" alpha="1" force_rhr="0">
-        <data_defined_properties>
-          <Option type="Map">
-            <Option value="" type="QString" name="name"/>
-            <Option name="properties"/>
-            <Option value="collection" type="QString" name="type"/>
-          </Option>
-        </data_defined_properties>
-        <layer enabled="1" pass="0" class="SimpleMarker" locked="0">
-          <Option type="Map">
-            <Option value="0" type="QString" name="angle"/>
-            <Option value="square" type="QString" name="cap_style"/>
-            <Option value="219,30,42,255" type="QString" name="color"/>
-            <Option value="1" type="QString" name="horizontal_anchor_point"/>
-            <Option value="bevel" type="QString" name="joinstyle"/>
-            <Option value="circle" type="QString" name="name"/>
-            <Option value="0,0" type="QString" name="offset"/>
-            <Option value="3x:0,0,0,0,0,0" type="QString" name="offset_map_unit_scale"/>
-            <Option value="MM" type="QString" name="offset_unit"/>
-            <Option value="128,17,25,255" type="QString" name="outline_color"/>
-            <Option value="solid" type="QString" name="outline_style"/>
-            <Option value="0.4" type="QString" name="outline_width"/>
-            <Option value="3x:0,0,0,0,0,0" type="QString" name="outline_width_map_unit_scale"/>
-            <Option value="MM" type="QString" name="outline_width_unit"/>
-            <Option value="diameter" type="QString" name="scale_method"/>
-            <Option value="4" type="QString" name="size"/>
-            <Option value="3x:0,0,0,0,0,0" type="QString" name="size_map_unit_scale"/>
-            <Option value="MM" type="QString" name="size_unit"/>
-            <Option value="1" type="QString" name="vertical_anchor_point"/>
-          </Option>
+      <symbol force_rhr="0" clip_to_extent="1" type="marker" name="0" alpha="1">
+        <layer class="SimpleMarker" enabled="1" locked="0" pass="0">
           <prop k="angle" v="0"/>
-          <prop k="cap_style" v="square"/>
-          <prop k="color" v="219,30,42,255"/>
+          <prop k="color" v="0,250,0,255"/>
           <prop k="horizontal_anchor_point" v="1"/>
           <prop k="joinstyle" v="bevel"/>
           <prop k="name" v="circle"/>
           <prop k="offset" v="0,0"/>
           <prop k="offset_map_unit_scale" v="3x:0,0,0,0,0,0"/>
           <prop k="offset_unit" v="MM"/>
-          <prop k="outline_color" v="128,17,25,255"/>
-          <prop k="outline_style" v="solid"/>
+          <prop k="outline_color" v="61,128,53,255"/>
+          <prop k="outline_style" v="no"/>
           <prop k="outline_width" v="0.4"/>
           <prop k="outline_width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
           <prop k="outline_width_unit" v="MM"/>
           <prop k="scale_method" v="diameter"/>
-          <prop k="size" v="4"/>
+          <prop k="size" v="2"/>
           <prop k="size_map_unit_scale" v="3x:0,0,0,0,0,0"/>
           <prop k="size_unit" v="MM"/>
           <prop k="vertical_anchor_point" v="1"/>
           <data_defined_properties>
             <Option type="Map">
-              <Option value="" type="QString" name="name"/>
+              <Option type="QString" name="name" value=""/>
               <Option name="properties"/>
-              <Option value="collection" type="QString" name="type"/>
+              <Option type="QString" name="type" value="collection"/>
+            </Option>
+          </data_defined_properties>
+        </layer>
+      </symbol>
+      <symbol force_rhr="0" clip_to_extent="1" type="marker" name="1" alpha="1">
+        <layer class="SimpleMarker" enabled="1" locked="0" pass="0">
+          <prop k="angle" v="0"/>
+          <prop k="color" v="255,0,0,255"/>
+          <prop k="horizontal_anchor_point" v="1"/>
+          <prop k="joinstyle" v="bevel"/>
+          <prop k="name" v="circle"/>
+          <prop k="offset" v="0,0"/>
+          <prop k="offset_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+          <prop k="offset_unit" v="MM"/>
+          <prop k="outline_color" v="35,35,35,255"/>
+          <prop k="outline_style" v="no"/>
+          <prop k="outline_width" v="0"/>
+          <prop k="outline_width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+          <prop k="outline_width_unit" v="MM"/>
+          <prop k="scale_method" v="diameter"/>
+          <prop k="size" v="2"/>
+          <prop k="size_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+          <prop k="size_unit" v="MM"/>
+          <prop k="vertical_anchor_point" v="1"/>
+          <data_defined_properties>
+            <Option type="Map">
+              <Option type="QString" name="name" value=""/>
+              <Option name="properties"/>
+              <Option type="QString" name="type" value="collection"/>
+            </Option>
+          </data_defined_properties>
+        </layer>
+      </symbol>
+      <symbol force_rhr="0" clip_to_extent="1" type="marker" name="2" alpha="1">
+        <layer class="SimpleMarker" enabled="1" locked="0" pass="0">
+          <prop k="angle" v="0"/>
+          <prop k="color" v="0,0,0,255"/>
+          <prop k="horizontal_anchor_point" v="1"/>
+          <prop k="joinstyle" v="bevel"/>
+          <prop k="name" v="circle"/>
+          <prop k="offset" v="0,0"/>
+          <prop k="offset_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+          <prop k="offset_unit" v="MM"/>
+          <prop k="outline_color" v="35,35,35,255"/>
+          <prop k="outline_style" v="solid"/>
+          <prop k="outline_width" v="0"/>
+          <prop k="outline_width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+          <prop k="outline_width_unit" v="MM"/>
+          <prop k="scale_method" v="diameter"/>
+          <prop k="size" v="2"/>
+          <prop k="size_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+          <prop k="size_unit" v="MM"/>
+          <prop k="vertical_anchor_point" v="1"/>
+          <data_defined_properties>
+            <Option type="Map">
+              <Option type="QString" name="name" value=""/>
+              <Option name="properties"/>
+              <Option type="QString" name="type" value="collection"/>
             </Option>
           </data_defined_properties>
         </layer>
       </symbol>
     </symbols>
+    <source-symbol>
+      <symbol force_rhr="0" clip_to_extent="1" type="marker" name="0" alpha="1">
+        <layer class="SimpleMarker" enabled="1" locked="0" pass="0">
+          <prop k="angle" v="0"/>
+          <prop k="color" v="225,89,137,255"/>
+          <prop k="horizontal_anchor_point" v="1"/>
+          <prop k="joinstyle" v="bevel"/>
+          <prop k="name" v="circle"/>
+          <prop k="offset" v="0,0"/>
+          <prop k="offset_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+          <prop k="offset_unit" v="MM"/>
+          <prop k="outline_color" v="35,35,35,255"/>
+          <prop k="outline_style" v="solid"/>
+          <prop k="outline_width" v="0"/>
+          <prop k="outline_width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+          <prop k="outline_width_unit" v="MM"/>
+          <prop k="scale_method" v="diameter"/>
+          <prop k="size" v="2"/>
+          <prop k="size_map_unit_scale" v="3x:0,0,0,0,0,0"/>
+          <prop k="size_unit" v="MM"/>
+          <prop k="vertical_anchor_point" v="1"/>
+          <data_defined_properties>
+            <Option type="Map">
+              <Option type="QString" name="name" value=""/>
+              <Option name="properties"/>
+              <Option type="QString" name="type" value="collection"/>
+            </Option>
+          </data_defined_properties>
+        </layer>
+      </symbol>
+    </source-symbol>
+    <colorramp type="randomcolors" name="[source]"/>
     <rotation/>
     <sizescale/>
   </renderer-v2>
   <customproperties>
-    <Option type="Map">
-      <Option value="0" type="int" name="embeddedWidgets/count"/>
-      <Option name="variableNames"/>
-      <Option name="variableValues"/>
-    </Option>
+    <property key="embeddedWidgets/count" value="0"/>
+    <property key="variableNames"/>
+    <property key="variableValues"/>
   </customproperties>
   <blendMode>0</blendMode>
   <featureBlendMode>0</featureBlendMode>
   <layerOpacity>1</layerOpacity>
   <SingleCategoryDiagramRenderer attributeLegend="1" diagramType="Histogram">
-    <DiagramCategory height="15" maxScaleDenominator="1e+08" scaleBasedVisibility="0" lineSizeScale="3x:0,0,0,0,0,0" scaleDependency="Area" minimumSize="0" lineSizeType="MM" spacing="5" penColor="#000000" sizeScale="3x:0,0,0,0,0,0" spacingUnitScale="3x:0,0,0,0,0,0" barWidth="5" minScaleDenominator="0" rotationOffset="270" labelPlacementMethod="XHeight" width="15" penAlpha="255" backgroundColor="#ffffff" backgroundAlpha="255" direction="0" sizeType="MM" diagramOrientation="Up" enabled="0" opacity="1" spacingUnit="MM" penWidth="0" showAxis="1">
-      <fontProperties style="" description="MS Shell Dlg 2,8,-1,5,50,0,0,0,0,0"/>
+    <DiagramCategory backgroundAlpha="255" direction="0" spacingUnitScale="3x:0,0,0,0,0,0" width="15" scaleDependency="Area" labelPlacementMethod="XHeight" sizeScale="3x:0,0,0,0,0,0" lineSizeScale="3x:0,0,0,0,0,0" penColor="#000000" opacity="1" barWidth="5" penWidth="0" height="15" penAlpha="255" showAxis="1" backgroundColor="#ffffff" maxScaleDenominator="1e+08" lineSizeType="MM" minimumSize="0" spacingUnit="MM" scaleBasedVisibility="0" diagramOrientation="Up" enabled="0" rotationOffset="270" sizeType="MM" spacing="5" minScaleDenominator="0">
+      <fontProperties description="MS Shell Dlg 2,8.25,-1,5,50,0,0,0,0,0" style=""/>
       <axisSymbol>
-        <symbol clip_to_extent="1" type="line" name="" alpha="1" force_rhr="0">
-          <data_defined_properties>
-            <Option type="Map">
-              <Option value="" type="QString" name="name"/>
-              <Option name="properties"/>
-              <Option value="collection" type="QString" name="type"/>
-            </Option>
-          </data_defined_properties>
-          <layer enabled="1" pass="0" class="SimpleLine" locked="0">
-            <Option type="Map">
-              <Option value="0" type="QString" name="align_dash_pattern"/>
-              <Option value="square" type="QString" name="capstyle"/>
-              <Option value="5;2" type="QString" name="customdash"/>
-              <Option value="3x:0,0,0,0,0,0" type="QString" name="customdash_map_unit_scale"/>
-              <Option value="MM" type="QString" name="customdash_unit"/>
-              <Option value="0" type="QString" name="dash_pattern_offset"/>
-              <Option value="3x:0,0,0,0,0,0" type="QString" name="dash_pattern_offset_map_unit_scale"/>
-              <Option value="MM" type="QString" name="dash_pattern_offset_unit"/>
-              <Option value="0" type="QString" name="draw_inside_polygon"/>
-              <Option value="bevel" type="QString" name="joinstyle"/>
-              <Option value="35,35,35,255" type="QString" name="line_color"/>
-              <Option value="solid" type="QString" name="line_style"/>
-              <Option value="0.26" type="QString" name="line_width"/>
-              <Option value="MM" type="QString" name="line_width_unit"/>
-              <Option value="0" type="QString" name="offset"/>
-              <Option value="3x:0,0,0,0,0,0" type="QString" name="offset_map_unit_scale"/>
-              <Option value="MM" type="QString" name="offset_unit"/>
-              <Option value="0" type="QString" name="ring_filter"/>
-              <Option value="0" type="QString" name="trim_distance_end"/>
-              <Option value="3x:0,0,0,0,0,0" type="QString" name="trim_distance_end_map_unit_scale"/>
-              <Option value="MM" type="QString" name="trim_distance_end_unit"/>
-              <Option value="0" type="QString" name="trim_distance_start"/>
-              <Option value="3x:0,0,0,0,0,0" type="QString" name="trim_distance_start_map_unit_scale"/>
-              <Option value="MM" type="QString" name="trim_distance_start_unit"/>
-              <Option value="0" type="QString" name="tweak_dash_pattern_on_corners"/>
-              <Option value="0" type="QString" name="use_custom_dash"/>
-              <Option value="3x:0,0,0,0,0,0" type="QString" name="width_map_unit_scale"/>
-            </Option>
+        <symbol force_rhr="0" clip_to_extent="1" type="line" name="" alpha="1">
+          <layer class="SimpleLine" enabled="1" locked="0" pass="0">
             <prop k="align_dash_pattern" v="0"/>
             <prop k="capstyle" v="square"/>
             <prop k="customdash" v="5;2"/>
@@ -146,20 +173,14 @@
             <prop k="offset_map_unit_scale" v="3x:0,0,0,0,0,0"/>
             <prop k="offset_unit" v="MM"/>
             <prop k="ring_filter" v="0"/>
-            <prop k="trim_distance_end" v="0"/>
-            <prop k="trim_distance_end_map_unit_scale" v="3x:0,0,0,0,0,0"/>
-            <prop k="trim_distance_end_unit" v="MM"/>
-            <prop k="trim_distance_start" v="0"/>
-            <prop k="trim_distance_start_map_unit_scale" v="3x:0,0,0,0,0,0"/>
-            <prop k="trim_distance_start_unit" v="MM"/>
             <prop k="tweak_dash_pattern_on_corners" v="0"/>
             <prop k="use_custom_dash" v="0"/>
             <prop k="width_map_unit_scale" v="3x:0,0,0,0,0,0"/>
             <data_defined_properties>
               <Option type="Map">
-                <Option value="" type="QString" name="name"/>
+                <Option type="QString" name="name" value=""/>
                 <Option name="properties"/>
-                <Option value="collection" type="QString" name="type"/>
+                <Option type="QString" name="type" value="collection"/>
               </Option>
             </data_defined_properties>
           </layer>
@@ -167,23 +188,91 @@
       </axisSymbol>
     </DiagramCategory>
   </SingleCategoryDiagramRenderer>
-  <DiagramLayerSettings showAll="1" dist="0" obstacle="0" linePlacementFlags="18" priority="0" zIndex="0" placement="0">
+  <DiagramLayerSettings placement="0" obstacle="0" dist="0" showAll="1" zIndex="0" priority="0" linePlacementFlags="18">
     <properties>
       <Option type="Map">
-        <Option value="" type="QString" name="name"/>
+        <Option type="QString" name="name" value=""/>
         <Option name="properties"/>
-        <Option value="collection" type="QString" name="type"/>
+        <Option type="QString" name="type" value="collection"/>
       </Option>
     </properties>
   </DiagramLayerSettings>
-  <geometryOptions geometryPrecision="0" removeDuplicateNodes="0">
+  <geometryOptions removeDuplicateNodes="0" geometryPrecision="0">
     <activeChecks/>
     <checkConfiguration/>
   </geometryOptions>
-  <legend showLabelLegend="0" type="default-vector"/>
+  <legend type="default-vector"/>
   <referencedLayers/>
   <fieldConfiguration>
-    <field configurationFlags="None" name="fid">
+    <field configurationFlags="None" name="ID_ANTIGO">
+      <editWidget type="TextEdit">
+        <config>
+          <Option type="Map">
+            <Option type="bool" name="IsMultiline" value="false"/>
+            <Option type="bool" name="UseHtml" value="false"/>
+          </Option>
+        </config>
+      </editWidget>
+    </field>
+    <field configurationFlags="None" name="NOME">
+      <editWidget type="TextEdit">
+        <config>
+          <Option type="Map">
+            <Option type="bool" name="IsMultiline" value="false"/>
+            <Option type="bool" name="UseHtml" value="false"/>
+          </Option>
+        </config>
+      </editWidget>
+    </field>
+    <field configurationFlags="None" name="NOMEABREV">
+      <editWidget type="TextEdit">
+        <config>
+          <Option type="Map">
+            <Option type="bool" name="IsMultiline" value="false"/>
+            <Option type="bool" name="UseHtml" value="false"/>
+          </Option>
+        </config>
+      </editWidget>
+    </field>
+    <field configurationFlags="None" name="GEOMETRIAA">
+      <editWidget type="TextEdit">
+        <config>
+          <Option type="Map">
+            <Option type="bool" name="IsMultiline" value="false"/>
+            <Option type="bool" name="UseHtml" value="false"/>
+          </Option>
+        </config>
+      </editWidget>
+    </field>
+    <field configurationFlags="None" name="TIPOCEMITE">
+      <editWidget type="TextEdit">
+        <config>
+          <Option/>
+        </config>
+      </editWidget>
+    </field>
+    <field configurationFlags="None" name="DENOMINACA">
+      <editWidget type="TextEdit">
+        <config>
+          <Option/>
+        </config>
+      </editWidget>
+    </field>
+    <field configurationFlags="None" name="ID_PRODUTO">
+      <editWidget type="TextEdit">
+        <config>
+          <Option/>
+        </config>
+      </editWidget>
+    </field>
+    <field configurationFlags="None" name="ID_ELEMENT">
+      <editWidget type="TextEdit">
+        <config>
+          <Option/>
+        </config>
+      </editWidget>
+    </field>
+    <field configurationFlags="None" name="TX_COMENTA">
       <editWidget type="TextEdit">
         <config>
           <Option/>
@@ -191,61 +280,163 @@
       </editWidget>
     </field>
     <field configurationFlags="None" name="id_measure">
-      <editWidget type="TextEdit">
+      <editWidget type="ValueMap">
         <config>
-          <Option/>
+          <Option type="Map">
+            <Option type="List" name="map">
+              <Option type="Map">
+                <Option type="QString" name="11 - Comissão" value="11"/>
+              </Option>
+              <Option type="Map">
+                <Option type="QString" name="12 - Omissão" value="12"/>
+              </Option>
+              <Option type="Map">
+                <Option type="QString" name="21 - Consistência Conceitual" value="21"/>
+              </Option>
+              <Option type="Map">
+                <Option type="QString" name="22 - Consistência de Domínio" value="22"/>
+              </Option>
+              <Option type="Map">
+                <Option type="QString" name="23 - Consistência de Formato" value="23"/>
+              </Option>
+              <Option type="Map">
+                <Option type="QString" name="24 - Consistência Topológica" value="24"/>
+              </Option>
+              <Option type="Map">
+                <Option type="QString" name="31 - Acurácia Posicional Absoluta" value="31"/>
+              </Option>
+              <Option type="Map">
+                <Option type="QString" name="32 - Acurácia Posicional Relativa" value="32"/>
+              </Option>
+              <Option type="Map">
+                <Option type="QString" name="33 - Acurácia Posicional dos Dados em Grade" value="33"/>
+              </Option>
+              <Option type="Map">
+                <Option type="QString" name="41 - Correção da Classificação" value="41"/>
+              </Option>
+              <Option type="Map">
+                <Option type="QString" name="42 - Correção dos Atributos Não-Quantitativos" value="42"/>
+              </Option>
+              <Option type="Map">
+                <Option type="QString" name="43 - Acurácia dos Atributos Quantitativos" value="43"/>
+              </Option>
+              <Option type="Map">
+                <Option type="QString" name="51 - Acurácia de uma Medida Temporal" value="51"/>
+              </Option>
+              <Option type="Map">
+                <Option type="QString" name="52 - Consistência Temporal" value="52"/>
+              </Option>
+              <Option type="Map">
+                <Option type="QString" name="53 - Validade Temporal" value="53"/>
+              </Option>
+              <Option type="Map">
+                <Option type="QString" name="6 - Usabilidade" value="6"/>
+              </Option>
+            </Option>
+          </Option>
+        </config>
+      </editWidget>
+    </field>
+    <field configurationFlags="None" name="checked">
+      <editWidget type="CheckBox">
+        <config>
+          <Option type="Map">
+            <Option type="QString" name="CheckedState" value="Visto"/>
+            <Option type="int" name="TextDisplayMethod" value="0"/>
+            <Option type="QString" name="UncheckedState" value="Pendente"/>
+          </Option>
+        </config>
+      </editWidget>
+    </field>
+    <field configurationFlags="None" name="status">
+      <editWidget type="ValueMap">
+        <config>
+          <Option type="Map">
+            <Option type="List" name="map">
+              <Option type="Map">
+                <Option type="QString" name="Aprovado" value="0"/>
+              </Option>
+              <Option type="Map">
+                <Option type="QString" name="Reprovado" value="1"/>
+              </Option>
+              <Option type="Map">
+                <Option type="QString" name="Pendente" value="{2839923C-8B7D-419E-B84B-CA2FE9B80EC7}"/>
+              </Option>
+            </Option>
+          </Option>
         </config>
       </editWidget>
     </field>
     <field configurationFlags="None" name="tx_report">
       <editWidget type="TextEdit">
         <config>
-          <Option/>
-        </config>
-      </editWidget>
-    </field>
-    <field configurationFlags="None" name="var_1">
-      <editWidget type="TextEdit">
-        <config>
-          <Option/>
-        </config>
-      </editWidget>
-    </field>
-    <field configurationFlags="None" name="var_2">
-      <editWidget type="TextEdit">
-        <config>
-          <Option/>
+          <Option type="Map">
+            <Option type="bool" name="IsMultiline" value="true"/>
+            <Option type="bool" name="UseHtml" value="false"/>
+          </Option>
         </config>
       </editWidget>
     </field>
   </fieldConfiguration>
   <aliases>
-    <alias field="fid" index="0" name=""/>
-    <alias field="id_measure" index="1" name=""/>
-    <alias field="tx_report" index="2" name=""/>
-    <alias field="var_1" index="3" name=""/>
-    <alias field="var_2" index="4" name=""/>
+    <alias field="ID_ANTIGO" name="" index="0"/>
+    <alias field="NOME" name="" index="1"/>
+    <alias field="NOMEABREV" name="" index="2"/>
+    <alias field="GEOMETRIAA" name="" index="3"/>
+    <alias field="TIPOCEMITE" name="" index="4"/>
+    <alias field="DENOMINACA" name="" index="5"/>
+    <alias field="ID_PRODUTO" name="" index="6"/>
+    <alias field="ID_ELEMENT" name="" index="7"/>
+    <alias field="TX_COMENTA" name="" index="8"/>
+    <alias field="id_measure" name="Elemento de qualidade / Quality element" index="9"/>
+    <alias field="checked" name="Checado/Checked" index="10"/>
+    <alias field="status" name="Status" index="11"/>
+    <alias field="tx_report" name="Relato / Report" index="12"/>
   </aliases>
   <defaults>
-    <default applyOnUpdate="0" expression="" field="fid"/>
-    <default applyOnUpdate="0" expression="" field="id_measure"/>
-    <default applyOnUpdate="0" expression="" field="tx_report"/>
-    <default applyOnUpdate="0" expression="" field="var_1"/>
-    <default applyOnUpdate="0" expression="" field="var_2"/>
+    <default field="ID_ANTIGO" applyOnUpdate="0" expression=""/>
+    <default field="NOME" applyOnUpdate="0" expression=""/>
+    <default field="NOMEABREV" applyOnUpdate="0" expression=""/>
+    <default field="GEOMETRIAA" applyOnUpdate="0" expression=""/>
+    <default field="TIPOCEMITE" applyOnUpdate="0" expression=""/>
+    <default field="DENOMINACA" applyOnUpdate="0" expression=""/>
+    <default field="ID_PRODUTO" applyOnUpdate="0" expression=""/>
+    <default field="ID_ELEMENT" applyOnUpdate="0" expression=""/>
+    <default field="TX_COMENTA" applyOnUpdate="0" expression=""/>
+    <default field="id_measure" applyOnUpdate="0" expression=""/>
+    <default field="checked" applyOnUpdate="0" expression=""/>
+    <default field="status" applyOnUpdate="0" expression=""/>
+    <default field="tx_report" applyOnUpdate="0" expression=""/>
   </defaults>
   <constraints>
-    <constraint unique_strength="1" constraints="3" field="fid" exp_strength="0" notnull_strength="1"/>
-    <constraint unique_strength="0" constraints="0" field="id_measure" exp_strength="0" notnull_strength="0"/>
-    <constraint unique_strength="0" constraints="0" field="tx_report" exp_strength="0" notnull_strength="0"/>
-    <constraint unique_strength="0" constraints="0" field="var_1" exp_strength="0" notnull_strength="0"/>
-    <constraint unique_strength="0" constraints="0" field="var_2" exp_strength="0" notnull_strength="0"/>
+    <constraint field="ID_ANTIGO" constraints="0" unique_strength="0" exp_strength="0" notnull_strength="0"/>
+    <constraint field="NOME" constraints="0" unique_strength="0" exp_strength="0" notnull_strength="0"/>
+    <constraint field="NOMEABREV" constraints="0" unique_strength="0" exp_strength="0" notnull_strength="0"/>
+    <constraint field="GEOMETRIAA" constraints="0" unique_strength="0" exp_strength="0" notnull_strength="0"/>
+    <constraint field="TIPOCEMITE" constraints="0" unique_strength="0" exp_strength="0" notnull_strength="0"/>
+    <constraint field="DENOMINACA" constraints="0" unique_strength="0" exp_strength="0" notnull_strength="0"/>
+    <constraint field="ID_PRODUTO" constraints="0" unique_strength="0" exp_strength="0" notnull_strength="0"/>
+    <constraint field="ID_ELEMENT" constraints="0" unique_strength="0" exp_strength="0" notnull_strength="0"/>
+    <constraint field="TX_COMENTA" constraints="0" unique_strength="0" exp_strength="0" notnull_strength="0"/>
+    <constraint field="id_measure" constraints="4" unique_strength="0" exp_strength="2" notnull_strength="0"/>
+    <constraint field="checked" constraints="0" unique_strength="0" exp_strength="0" notnull_strength="0"/>
+    <constraint field="status" constraints="0" unique_strength="0" exp_strength="0" notnull_strength="0"/>
+    <constraint field="tx_report" constraints="0" unique_strength="0" exp_strength="0" notnull_strength="0"/>
   </constraints>
   <constraintExpressions>
-    <constraint exp="" desc="" field="fid"/>
-    <constraint exp="" desc="" field="id_measure"/>
-    <constraint exp="" desc="" field="tx_report"/>
-    <constraint exp="" desc="" field="var_1"/>
-    <constraint exp="" desc="" field="var_2"/>
+    <constraint field="ID_ANTIGO" desc="" exp=""/>
+    <constraint field="NOME" desc="" exp=""/>
+    <constraint field="NOMEABREV" desc="" exp=""/>
+    <constraint field="GEOMETRIAA" desc="" exp=""/>
+    <constraint field="TIPOCEMITE" desc="" exp=""/>
+    <constraint field="DENOMINACA" desc="" exp=""/>
+    <constraint field="ID_PRODUTO" desc="" exp=""/>
+    <constraint field="ID_ELEMENT" desc="" exp=""/>
+    <constraint field="TX_COMENTA" desc="" exp=""/>
+    <constraint field="id_measure" desc="" exp="&quot;ID_ANTIGO&quot;"/>
+    <constraint field="checked" desc="" exp=""/>
+    <constraint field="status" desc="" exp=""/>
+    <constraint field="tx_report" desc="" exp=""/>
   </constraintExpressions>
   <expressionfields/>
   <attributeactions>
@@ -253,12 +444,20 @@
   </attributeactions>
   <attributetableconfig sortExpression="" actionWidgetStyle="dropDown" sortOrder="0">
     <columns>
-      <column width="-1" hidden="0" type="field" name="fid"/>
-      <column width="-1" hidden="0" type="field" name="id_measure"/>
-      <column width="-1" hidden="0" type="field" name="tx_report"/>
-      <column width="-1" hidden="0" type="field" name="var_1"/>
-      <column width="-1" hidden="0" type="field" name="var_2"/>
-      <column width="-1" hidden="1" type="actions"/>
+      <column type="field" name="ID_ANTIGO" hidden="0" width="-1"/>
+      <column type="field" name="NOME" hidden="0" width="-1"/>
+      <column type="field" name="NOMEABREV" hidden="0" width="-1"/>
+      <column type="field" name="GEOMETRIAA" hidden="0" width="-1"/>
+      <column type="field" name="TIPOCEMITE" hidden="0" width="-1"/>
+      <column type="field" name="DENOMINACA" hidden="0" width="-1"/>
+      <column type="field" name="ID_PRODUTO" hidden="0" width="-1"/>
+      <column type="field" name="ID_ELEMENT" hidden="0" width="-1"/>
+      <column type="field" name="TX_COMENTA" hidden="0" width="-1"/>
+      <column type="field" name="id_measure" hidden="0" width="-1"/>
+      <column type="field" name="checked" hidden="0" width="-1"/>
+      <column type="field" name="status" hidden="0" width="-1"/>
+      <column type="field" name="tx_report" hidden="0" width="-1"/>
+      <column type="actions" hidden="1" width="-1"/>
     </columns>
   </attributetableconfig>
   <conditionalstyles>
@@ -272,46 +471,56 @@
   <editforminitfilepath></editforminitfilepath>
   <editforminitcode><![CDATA[# -*- código: utf-8 -*-
 """
-Os formulários do QGIS podem ter uma função Python que é chamada quando o formulário é
+Formas QGIS podem ter uma função Python que é chamada quando o formulário é
 aberto.
 
-Use esta função para adicionar lógica extra aos seus formulários.
+Use esta função para adicionar lógica extra para seus formulários.
 
-Entre com o nome da função no campo "função Python Init
-Segue um exemplo:
+Digite o nome da função na "função Python Init"
+campo.
+Um exemplo a seguir:
 """
-de qgis.PyQt.QtWidgets import QWidget
+de qgis.PyQt.QtWidgets importar QWidget
 
 def my_form_open(diálogo, camada, feição):
-    geom = feature.geometry()
-    control = dialog.findChild(QWidget, "MyLineEdit")
+	geom = feature.geometry()
+	control = dialog.findChild(QWidget, "MyLineEdit")
 ]]></editforminitcode>
   <featformsuppress>0</featformsuppress>
   <editorlayout>generatedlayout</editorlayout>
   <editable>
-    <field editable="1" name="fid"/>
-    <field editable="1" name="id_measure"/>
-    <field editable="1" name="tx_report"/>
-    <field editable="1" name="var_1"/>
-    <field editable="1" name="var_2"/>
+    <field name="DENOMINACA" editable="1"/>
+    <field name="GEOMETRIAA" editable="1"/>
+    <field name="ID_ANTIGO" editable="1"/>
+    <field name="ID_ELEMENT" editable="1"/>
+    <field name="ID_PRODUTO" editable="1"/>
+    <field name="NOME" editable="1"/>
+    <field name="NOMEABREV" editable="1"/>
+    <field name="TIPOCEMITE" editable="1"/>
+    <field name="TX_COMENTA" editable="1"/>
+    <field name="checked" editable="1"/>
+    <field name="id_measure" editable="1"/>
+    <field name="status" editable="1"/>
+    <field name="tx_report" editable="1"/>
   </editable>
   <labelOnTop>
-    <field labelOnTop="0" name="fid"/>
-    <field labelOnTop="0" name="id_measure"/>
-    <field labelOnTop="0" name="tx_report"/>
-    <field labelOnTop="0" name="var_1"/>
-    <field labelOnTop="0" name="var_2"/>
+    <field labelOnTop="0" name="DENOMINACA"/>
+    <field labelOnTop="0" name="GEOMETRIAA"/>
+    <field labelOnTop="0" name="ID_ANTIGO"/>
+    <field labelOnTop="0" name="ID_ELEMENT"/>
+    <field labelOnTop="0" name="ID_PRODUTO"/>
+    <field labelOnTop="0" name="NOME"/>
+    <field labelOnTop="0" name="NOMEABREV"/>
+    <field labelOnTop="0" name="TIPOCEMITE"/>
+    <field labelOnTop="0" name="TX_COMENTA"/>
+    <field labelOnTop="0" name="checked"/>
+    <field labelOnTop="1" name="id_measure"/>
+    <field labelOnTop="0" name="status"/>
+    <field labelOnTop="1" name="tx_report"/>
   </labelOnTop>
-  <reuseLastValue>
-    <field reuseLastValue="0" name="fid"/>
-    <field reuseLastValue="0" name="id_measure"/>
-    <field reuseLastValue="0" name="tx_report"/>
-    <field reuseLastValue="0" name="var_1"/>
-    <field reuseLastValue="0" name="var_2"/>
-  </reuseLastValue>
   <dataDefinedFieldProperties/>
   <widgets/>
-  <previewExpression>"id_measure"</previewExpression>
+  <previewExpression>"NOME"</previewExpression>
   <mapTip></mapTip>
   <layerGeometryType>0</layerGeometryType>
 </qgis>

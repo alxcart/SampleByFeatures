@@ -27,14 +27,14 @@ from qgis.PyQt.QtWidgets import QAction
 
 from qgis.core import *
 from math import ceil
-import os.path
+#import os.path
 from osgeo import ogr
 import random
 
-#from .constants import * # constants of project
 from .main_sample_plan import * # functions of project
+#from .constants import * # constants of project
 #import sys # usar no desenvolvimento #
-#sys.path.append(os.path.abspath(r"C:/Users/Admin/AppData/Roaming/QGIS/QGIS3/profiles/default/python/plugins/SampleByArea/"))
+#sys.path.append(os.path.abspath(r"C:/Users/Admin/AppData/Roaming/QGIS/QGIS3/profiles/default/python/plugins/SampleByFeatures/"))
 #from main_sample_plan import *
 
 # based on the clip_multiple_layers plugin
@@ -48,6 +48,7 @@ from .resources import *
 # Import the code for the dialog
 from .SampleByFeatures_dialog import SampleByFeaturesDialog
 import os.path
+
 
 
 class SampleByFeatures:
@@ -65,6 +66,7 @@ class SampleByFeatures:
         self.iface = iface
         # initialize plugin directory
         self.plugin_dir = os.path.dirname(__file__)
+
         # initialize locale
         locale = QSettings().value('locale/userLocale')[0:2]
         locale_path = os.path.join(
@@ -262,9 +264,15 @@ class SampleByFeatures:
             # Do something useful here - delete the line containing pass and
             # substitute with your code.
             #pass
-            if not os.path.isdir(self.folderName):
-                raise FileNotFoundError(
-                    errno.ENOENT, os.strerror(errno.ENOENT), self.folderName)
+            #ATIVO = "area"
+            ATIVO = "feature"
+            try: 
+                if not os.path.isdir(self.folderName):
+                    raise FileNotFoundError(
+                        errno.ENOENT, os.strerror(errno.ENOENT), self.folderName)
+            except NameError:
+                QMessageBox.critical(None, "Folder not found", "Please select folder")
+                return True
 
             directory = self.folderName + "/sample_features"
             if not os.path.exists(directory):
@@ -279,30 +287,49 @@ class SampleByFeatures:
             nivel_inspecao = self.dlg.comboBoxLevel.currentIndex()
             tipo_inspecao = self.dlg.comboBoxType.currentIndex()
             lqa = self.dlg.comboBoxLQA.currentIndex()
-       
+            
+            #ATIVO = "area"
+            #ATIVO = "feature"
+            
+            ###########  Sample by area ###############################   
+            if ATIVO =="area": 
+                isSelectedId, features, N, n, num_aceitacao, letra_codigo_i, letra_codigo_f, msg = grid_square(selection, nivel_inspecao, lqa, tipo_inspecao, size)
+            
+            ###########  Sample by features ###########################   
 
-###########  Sample by features ###########################   
+            if ATIVO == "feature":
+                N, n, num_aceitacao, letra_codigo_i, letra_codigo_f, msg = sample_plan (features_selection(selection), nivel_inspecao, lqa + 4 , tipo_inspecao)
+                features = selection
+                isSelectedId = sample_features(N, n)          
+
+
    
-            N, n, num_aceitacao, letra_codigo_i, letra_codigo_f, msg = sample_plan (features_selection(selection), nivel_inspecao, lqa + 4 , tipo_inspecao)
+            # N, n, num_aceitacao, letra_codigo_i, letra_codigo_f, msg = sample_plan (features_selection(selection), nivel_inspecao, lqa + 4 , tipo_inspecao)
 
             # Se o numero de aceitacao for ""Utilizar plano de amostragem simples indicado acima"
             # Mudar o tipo de inspeção de multipla ou dupla para simples
-            if dicAc_dupla[num_aceitacao][0] == "Utilizar plano de amostragem simples indicado acima" or dicAc_multipla[num_aceitacao][0] == "Utilizar plano de amostragem simples indicado acima":
-                tipo_inspecao = 0   
-                N, n, num_aceitacao, letra_codigo_i, letra_codigo_f, msg = sample_plan (features_selection(selection), nivel_inspecao, lqa + 4 , tipo_inspecao)
+            #if dicAc_dupla[num_aceitacao][0] == "Utilizar plano de amostragem simples indicado acima" or dicAc_multipla[num_aceitacao][0] == "Utilizar plano de amostragem simples indicado acima":
+            #    tipo_inspecao = 0   
+            #    N, n, num_aceitacao, letra_codigo_i, letra_codigo_f, msg = sample_plan (features_selection(selection), nivel_inspecao, lqa + 4 , tipo_inspecao)
             
 ###########################################################           
             # Export results - file created and save
-            pth = directory
-#            output_sample(N, n, selection, directory, msg, num_aceitacao)
-            codigo_arquivo, nome_arquivo, amostra_virtual = output_sample(N, n, selection, directory, msg, num_aceitacao)
+            #pth = directory
+#           # output_sample(N, n, selection, directory, msg, num_aceitacao)
+            #codigo_arquivo, nome_arquivo, amostra_virtual = output_sample_plan(N, n, selection, directory, msg, num_aceitacao)
 
             #codigo_arquivo, nome_arquivo, amostra_virtual = output_sample_grade (N, n, selection, directory, features, isSelectedId, msg, num_aceitacao)
-            filename = nome_arquivo
-            ly_virtual = amostra_virtual
-            size = selection.__len__()
+            #filename = nome_arquivo
+            #ly_virtual = amostra_virtual
+            #size = selection.__len__()
 
-            if N > n:
+            if N > n and ATIVO == 'feature':
+                #codigo_arquivo, nome_arquivo, amostra_virtual = output_sample_plan(N, n, selection, directory, msg, num_aceitacao, ATIVO)
+                codigo_arquivo, nome_arquivo, amostra_virtual = output_sample_plan (N, n, selection, directory, features, isSelectedId, msg, num_aceitacao, ATIVO)
+                filename = nome_arquivo
+                ly_virtual = amostra_virtual
+                size = selection.__len__()
+
                 sumario, texto_resultado = msg_sample_plan( N, n, num_aceitacao, letra_codigo_i, letra_codigo_f, msg, lqa, nivel_inspecao)
                 texto_metadado = metadado(sumario, texto_resultado, size, selection.name(), nome_arquivo)
                 save_gpkg(ly_virtual, filename, codigo_arquivo)  
@@ -314,20 +341,20 @@ class SampleByFeatures:
                     f.close()
                     # criar função define_style
                     dir_style = os.path.dirname(__file__) # 'C:\\Users/Admin/AppData/Roaming/QGIS/QGIS3\\profiles\\default/python/plugins\\SampleByArea'
-                    style = (dir_style + '/sample_feature_.qml')
+                    style = (dir_style + '/inspecao_a.qml')
                     style_inspecao_p = (dir_style + '/inspecao_p.qml')
                     layer_sample = iface.addVectorLayer(nome_arquivo, "" ,"ogr")
                     # Definir o caminho para o arquivo Geopackage
                     #geopackage_path = filename
 
                     # Definir o nome da camada e o nome do estilo
-                    layer_name = "sample_" + codigo_arquivo
+                    layer_name = "sample_feature" + codigo_arquivo
                     layer_inspecao = "inspecao_p"
                     #style sample area
                     project = QgsProject.instance()
-                    #layer = project.mapLayersByName(layer_name)#[0]
-                    #layer.loadNamedStyle(style)
-                    #layer.saveNamedStyle(directory + "/sample_" + codigo_arquivo + ".qml") 
+                    #layer = project.mapLayersByName(layer_name)[0]
+                    layer.loadNamedStyle(style)
+                    layer.saveNamedStyle(directory + "/sample_feature_" + codigo_arquivo + ".qml") 
                     #success = layer.saveStyleToDatabase(style, "sample", QgsStyle.UseLayerName)
 
                     #style inspecao pontual

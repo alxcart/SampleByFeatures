@@ -313,16 +313,16 @@ class SampleByFeatures:
 
                 #### SALVAR GEOPACKAGE #######
                 nome_camada = str("sample_" + str(ATIVO) + "_" +  str(codigo_arquivo))
-                option_1 = QgsVectorFileWriter.CreateOrOverwriteFile 
-                #option_2 = QgsVectorFileWriter.CreateOrOverwriteLayer 
-                save_gpkg(ly_virtual, filename, nome_camada, option_1)
+                # option_1 = QgsVectorFileWriter.CreateOrOverwriteFile 
+                # option_2 = QgsVectorFileWriter.CreateOrOverwriteLayer 
+                save_gpkg(ly_virtual, filename, nome_camada) #, option_1)
 
                 #### CLASSE OCORRENCIA ######
                 classe_ocorrencia = camada_virtual()
                 nome_camada = "inspecao_p" #"sample_" + str(ATIVO) + "_" +  str(codigo_arquivo)
                 #option_1 = QgsVectorFileWriter.CreateOrOverwriteFile 
                 option_2 = QgsVectorFileWriter.CreateOrOverwriteLayer 
-                save_gpkg(classe_ocorrencia, filename, nome_camada, option_2)  
+                save_gpkg(classe_ocorrencia, filename, nome_camada) #, option_2)  
                 
                 #### LAYER PLANO DE AMOSTRAGEM
                 load_sample_plan(nome_arquivo, ATIVO, codigo_arquivo, directory, texto_metadado, sumario)

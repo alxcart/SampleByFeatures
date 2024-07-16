@@ -814,7 +814,7 @@ def data_sample():
     return tx_data
     
 #################################################
-def save_gpkg(camada, filename, nome_camada, option_A):
+def save_gpkg(camada, filename, nome_camada): #, option_A)
     dp = camada.dataProvider()
     # Configurar opções de salvamento
     destination_crs = dp.crs()
@@ -828,9 +828,11 @@ def save_gpkg(camada, filename, nome_camada, option_A):
     layer = camada # iface.activeLayer()
     output_path = filename #"/path/to/output/file.gpkg"
     #layer_name = nome_camada # "my_layer"
-           
-    options.actionOnExistingFile = option_A #QgsVectorFileWriter.CreateOrOverwriteFile # Crie ou sobrescreva a camada no GeoPackage
-
+    option_1 = QgsVectorFileWriter.CreateOrOverwriteFile 
+    option_2 = QgsVectorFileWriter.CreateOrOverwriteLayer
+    options.actionOnExistingFile = option_1
+    if os.path.exists(filename):
+        options.actionOnExistingFile = option_2 #QgsVectorFileWriter.CreateOrOverwriteFile # Crie ou sobrescreva a camada no GeoPackage
     # Salve a camada no GeoPackage
     QgsVectorFileWriter.writeAsVectorFormat(camada, filename, options)
     # Salve a camada no GeoPackage
@@ -881,8 +883,8 @@ def return_units():
         self.dlg.label_size.setText(str(grid))
         return units, units_id, grid
     # End returns the unit of measure of the layer
-#################################################
 
+#################################################
 #### carregar plano de amostragem no projeto
 def load_sample_plan(nome_arquivo, ATIVO, codigo_arquivo, directory, texto_metadado, sumario): 
         layer = QgsVectorLayer(nome_arquivo, "sample_" + str(ATIVO) + "_" + str(codigo_arquivo) ,"ogr")
@@ -906,9 +908,10 @@ def load_sample_plan(nome_arquivo, ATIVO, codigo_arquivo, directory, texto_metad
                                         )
         #return layer_sample
         
-
+#################################################
 def load_simbology(ATIVO, codigo_arquivo, directory):
             # SIMBOLOGIA
+            #layer = iface.activeLayer()
             # criar função define_style
             dir_style = os.path.dirname(__file__) # 'C:\\Users/Admin/AppData/Roaming/QGIS/QGIS3\\profiles\\default/python/plugins\\SampleByArea'
             style_inspecao_a = (dir_style + '/inspecao_a.qml')
@@ -925,22 +928,21 @@ def load_simbology(ATIVO, codigo_arquivo, directory):
             inspecao_p = project.mapLayersByName(layer_inspecao)[0]
             
             geometry = layer_p.wkbType()
-            geometry_type = QgsWkbTypes.displayString(geometry)
+            #geometry_type = QgsWkbTypes.displayString(geometry)
             
             #carregar estilos (QML)
             if ATIVO == "area":
                 layer_p.loadNamedStyle(style_inspecao_a)
                 inspecao_p.loadNamedStyle(style_inspecao_p)
-                
             if ATIVO == "feature":
                 inspecao_p.loadNamedStyle(style_inspecao_p)
-                if geometry_type == QgsWkbTypes.Point or geometry_type == QgsWkbTypes.MultiPoint:
+                if geometry == QgsWkbTypes.Point or geometry == QgsWkbTypes.MultiPoint:
                     layer_p.loadNamedStyle(style_inspecao_p)
 
-                if geometry_type == QgsWkbTypes.LineString or geometry_type == QgsWkbTypes.MultiLineString:
+                if geometry == QgsWkbTypes.LineString or geometry == QgsWkbTypes.MultiLineString:
                     layer_p.loadNamedStyle(style_inspecao_l)
                     
-                if geometry_type == QgsWkbTypes.Polygon or geometry_type == QgsWkbTypes.MultiPolygon:
+                if geometry == QgsWkbTypes.Polygon or geometry == QgsWkbTypes.MultiPolygon:
                     layer_p.loadNamedStyle(style_inspecao_a)                  
                     
             # Salvar o estilo no diretorio

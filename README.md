@@ -2,7 +2,7 @@
 ![Logo sample by features](https://plugins.qgis.org/media/cache/6b/b7/6bb7a162257fa7d9de238d7c0dd1bb82.png)
 
 ##### by Alex Santos (IBGE)
-##### version = 0.6
+##### version = 1.0
 ##### Github = alxcart
 
 ### About

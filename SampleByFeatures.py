@@ -26,28 +26,29 @@ from qgis.PyQt.QtGui import QIcon
 from qgis.PyQt.QtWidgets import QAction
 
 from qgis.core import *
-from math import ceil
-#import os.path
-from osgeo import ogr
-import random
-
 from .main_sample_plan import * # functions of project
-#from .constants import * # constants of project
-#import sys # usar no desenvolvimento #
-#sys.path.append(os.path.abspath(r"C:/Users/Admin/AppData/Roaming/QGIS/QGIS3/profiles/default/python/plugins/SampleByFeatures/"))
-#from main_sample_plan import *
-
-# based on the clip_multiple_layers plugin
-import processing, os, subprocess, time
 from qgis.utils import *
 from qgis.PyQt.QtCore import *
-from processing.algs.gdal.GdalUtils import GdalUtils
+#from processing.algs.gdal.GdalUtils import GdalUtils
 
 # Initialize Qt resources from file resources.py
 from .resources import *
 # Import the code for the dialog
 from .SampleByFeatures_dialog import SampleByFeaturesDialog
 import os.path
+
+#import os 
+#from math import ceil
+#import os.path
+#from osgeo import ogr
+#import random
+#from .constants import * # constants of project
+#import sys # usar no desenvolvimento #
+#sys.path.append(os.path.abspath(r"C:/Users/Admin/AppData/Roaming/QGIS/QGIS3/profiles/default/python/plugins/SampleByFeatures/"))
+#from main_sample_plan import *
+# based on the clip_multiple_layers plugin
+#import processing, os, subprocess, time
+
 
 class SampleByFeatures:
     """QGIS Plugin Implementation."""
@@ -245,8 +246,7 @@ class SampleByFeatures:
         #self.dlg.lineEditSize.setText(str(4.0))
         #self.dlg.comboBoxLevel.setItemText(self, 1, "II")
 
-        #layers = list_layers()
-        
+        # LISTA CAMADAS DO PROJETO COM REGISTRO
         layers = QgsProject.instance().mapLayers().values()
         for layer in layers:
             if layer.type() == QgsMapLayer.VectorLayer :
@@ -262,6 +262,8 @@ class SampleByFeatures:
             # Do something useful here - delete the line containing pass and
             # substitute with your code.
             #pass
+
+            # DIRETORIO DE SAIDA
             try: 
                 if not os.path.isdir(self.folderName):
                     raise FileNotFoundError(
@@ -274,12 +276,12 @@ class SampleByFeatures:
             if not os.path.exists(directory):
                 os.makedirs(directory)
             
-            #Input data selection
+            # CAMADA DE ENTRADA 
             index = self.dlg.comboBox.currentIndex()
             selection = self.dlg.comboBox.itemData(index)
-            checkedLayers = QgsProject.instance().layerTreeRoot().checkedLayers()
+            #checkedLayers = QgsProject.instance().layerTreeRoot().checkedLayers()
             
-            # Sampling plan / Plano de amostragem
+            # PARAMETROS PLANOS DE AMOSTRAGEM 
             nivel_inspecao = self.dlg.comboBoxLevel.currentIndex()
             tipo_inspecao = self.dlg.comboBoxType.currentIndex()
             lqa = self.dlg.comboBoxLQA.currentIndex()
@@ -299,8 +301,8 @@ class SampleByFeatures:
                 isSelectedId = sample_features(N, n)
               
             
-            if N > n:# and ATIVO == "area":
-                #codigo_arquivo, nome_arquivo, amostra_virtual = output_sample_grade (N, n, selection, directory, features, isSelectedId, msg, num_aceitacao, ATIVO)
+            if N > n: 
+                #### INICIO PLANO DE AMOSTRAGEM #######
                 codigo_arquivo, nome_arquivo, amostra_virtual = output_sample_plan(N, n, selection, directory, features, isSelectedId, msg, num_aceitacao, ATIVO)
                 filename = nome_arquivo
                 ly_virtual = amostra_virtual
@@ -309,31 +311,22 @@ class SampleByFeatures:
                 sumario, texto_resultado = msg_sample_plan( N, n, num_aceitacao, letra_codigo_i, letra_codigo_f, msg, lqa, nivel_inspecao)
                 texto_metadado = metadado(sumario, texto_resultado, size, selection.name(), nome_arquivo)
 
+                #### SALVAR GEOPACKAGE #######
+                nome_camada = str("sample_" + str(ATIVO) + "_" +  str(codigo_arquivo))
+                option_1 = QgsVectorFileWriter.CreateOrOverwriteFile 
+                #option_2 = QgsVectorFileWriter.CreateOrOverwriteLayer 
+                save_gpkg(ly_virtual, filename, nome_camada, option_1)
+
                 #### CLASSE OCORRENCIA ######
                 classe_ocorrencia = camada_virtual()
                 nome_camada = "inspecao_p" #"sample_" + str(ATIVO) + "_" +  str(codigo_arquivo)
-                #save_gpkg(classe_ocorrencia, filename, nome_camada)  
-
-                #### SALVAR GEOPACKAGE #######
-                nome_camada = str("sample_" + str(ATIVO) + "_" +  str(codigo_arquivo))
-                save_gpkg(ly_virtual, filename, nome_camada)
-                
-
-                
-                # Definir o caminho para o arquivo Geopackage
-                geopackage_path = nome_arquivo
+                #option_1 = QgsVectorFileWriter.CreateOrOverwriteFile 
+                option_2 = QgsVectorFileWriter.CreateOrOverwriteLayer 
+                save_gpkg(classe_ocorrencia, filename, nome_camada, option_2)  
                 
                 #### LAYER PLANO DE AMOSTRAGEM
-                #layer = QgsVectorLayer(nome_arquivo, "sample_" + str(ATIVO) + "_" + str(codigo_arquivo) ,"ogr")
-
-                #### carregar plano de amostragem no projeto
                 load_sample_plan(nome_arquivo, ATIVO, codigo_arquivo, directory, texto_metadado, sumario)
-                
-                #### carregar simbologia ao projeto
-                #if layer.isValid() == True:
-                #    #### carregar simbologia
-                #    load_simbology(nome_arquivo, ATIVO, codigo_arquivo, directory)
-
+               
 
             if N <= n:
                 msg_complete( N, n, msg)

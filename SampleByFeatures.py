@@ -284,73 +284,56 @@ class SampleByFeatures:
             tipo_inspecao = self.dlg.comboBoxType.currentIndex()
             lqa = self.dlg.comboBoxLQA.currentIndex()
             
-
-            
-            ###########  Sample by area ###############################   
+            ##################################################################
+            ###########  SAMPLE BY AREA ######################################
+            ##################################################################
             if ATIVO =="area": 
                 isSelectedId, features, N, n, num_aceitacao, letra_codigo_i, letra_codigo_f, msg = grid_square(selection, nivel_inspecao, lqa, tipo_inspecao, size)
             
-            ###########  Sample by features ###########################   
-
+            ##################################################################
+            ###########  SAMPLE BY FEATURE ###################################
+            ##################################################################
             if ATIVO == "feature":
-                N, n, num_aceitacao, letra_codigo_i, letra_codigo_f, msg = sample_plan (features_selection(selection), nivel_inspecao, lqa + 4 , tipo_inspecao)
-                features = selection
-                isSelectedId = sample_features(N, n)          
-
-  
-
-            if N > n and ATIVO == 'feature':
-                #codigo_arquivo, nome_arquivo, amostra_virtual = output_sample_plan(N, n, selection, directory, msg, num_aceitacao, ATIVO)
-                codigo_arquivo, nome_arquivo, amostra_virtual = output_sample_plan (N, n, selection, directory, features, isSelectedId, msg, num_aceitacao, ATIVO)
+                N, n, num_aceitacao, letra_codigo_i, letra_codigo_f, msg = sample_plan(features_selection(selection), nivel_inspecao, lqa + 4 , tipo_inspecao)
+                features = selection 
+                isSelectedId = sample_features(N, n)
+              
+            
+            if N > n:# and ATIVO == "area":
+                #codigo_arquivo, nome_arquivo, amostra_virtual = output_sample_grade (N, n, selection, directory, features, isSelectedId, msg, num_aceitacao, ATIVO)
+                codigo_arquivo, nome_arquivo, amostra_virtual = output_sample_plan(N, n, selection, directory, features, isSelectedId, msg, num_aceitacao, ATIVO)
                 filename = nome_arquivo
                 ly_virtual = amostra_virtual
                 size = selection.__len__()
-
+                
                 sumario, texto_resultado = msg_sample_plan( N, n, num_aceitacao, letra_codigo_i, letra_codigo_f, msg, lqa, nivel_inspecao)
                 texto_metadado = metadado(sumario, texto_resultado, size, selection.name(), nome_arquivo)
-                save_gpkg(ly_virtual, filename, codigo_arquivo)  
 
-                layer = QgsVectorLayer(nome_arquivo, "sample_" + str(ATIVO) + "_" + str(codigo_arquivo) ,"ogr")
-                if layer.isValid() == True:
-                    f = open (directory + "/sample_" + str(ATIVO) + "_" + codigo_arquivo + ".qmd", "w+")
-                    f.write(texto_metadado)
-                    f.close()
-                    # criar função define_style
-                    dir_style = os.path.dirname(__file__) # 'C:\\Users/Admin/AppData/Roaming/QGIS/QGIS3\\profiles\\default/python/plugins\\SampleByArea'
-                    style = (dir_style + '/inspecao_a.qml')
-                    style_inspecao_p = (dir_style + '/inspecao_p.qml')
-                    layer_sample = iface.addVectorLayer(nome_arquivo, "" ,"ogr")
-                    # Definir o caminho para o arquivo Geopackage
-                    #geopackage_path = filename
+                #### CLASSE OCORRENCIA ######
+                classe_ocorrencia = camada_virtual()
+                nome_camada = "inspecao_p" #"sample_" + str(ATIVO) + "_" +  str(codigo_arquivo)
+                #save_gpkg(classe_ocorrencia, filename, nome_camada)  
 
-                    # Definir o nome da camada e o nome do estilo
-                    layer_name = "sample_" + str(ATIVO) + codigo_arquivo
-                    layer_inspecao = "inspecao_p"
-                    #style sample area
-                    project = QgsProject.instance()
-                    #layer = project.mapLayersByName(layer_name)[0]
-                    layer.loadNamedStyle(style)
-                    layer.saveNamedStyle(directory + "/sample_" + str(ATIVO) + "_" + codigo_arquivo + ".qml") 
-                    #success = layer.saveStyleToDatabase(style, "sample", QgsStyle.UseLayerName)
-                    #style inspecao pontual
-                    #inspecao_p_style = project.mapLayersByName(layer_inspecao)#[0]
-                    #inspecao_p_style.loadNamedStyle(style_inspecao_p)
-                    #inspecao_p_style.saveNamedStyle(directory + "/inspecao_p.qml")
-                    #style_manager = QgsMapLayerStyleManager(str(qml_path+ "/sample_area_" + codigo_arquivo + ".qml"))
-                    #style_manager.saveStyleToDatabase(style_name, geopackage_path)
-                                       
-                    QMessageBox.about(None, "Sample by feature", sumario)
-                if layer.isValid() == False:
-                    QMessageBox.warning(None, "Sample by feature", "O arquivo " + 
-                                        codigo_arquivo + " já existe na pasta.\n" +
-                                        "\n   Por favor, alterar os parâmetros do plano de amostragem" +
-                                        "\nou selecionar uma nova pasta.\n"
-                                        )
+                #### SALVAR GEOPACKAGE #######
+                nome_camada = str("sample_" + str(ATIVO) + "_" +  str(codigo_arquivo))
+                save_gpkg(ly_virtual, filename, nome_camada)
+                
 
-                # carregar metadado neste momento. 
-                # checar existencia do arquivo antes de escrever. Atualmente, o anterior é perdido. 
-                #Carregar camada
-                #QgsProject.instance().addMapLayer(ly)
-                           
+                
+                # Definir o caminho para o arquivo Geopackage
+                geopackage_path = nome_arquivo
+                
+                #### LAYER PLANO DE AMOSTRAGEM
+                #layer = QgsVectorLayer(nome_arquivo, "sample_" + str(ATIVO) + "_" + str(codigo_arquivo) ,"ogr")
+
+                #### carregar plano de amostragem no projeto
+                load_sample_plan(nome_arquivo, ATIVO, codigo_arquivo, directory, texto_metadado, sumario)
+                
+                #### carregar simbologia ao projeto
+                #if layer.isValid() == True:
+                #    #### carregar simbologia
+                #    load_simbology(nome_arquivo, ATIVO, codigo_arquivo, directory)
+
+
             if N <= n:
                 msg_complete( N, n, msg)
